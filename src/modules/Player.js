@@ -1,26 +1,19 @@
 
+import GameObject from './GameObject/GameObject'
 
-class Particle extends GameObject {
-  constructor (limit_h, limit_w, app){
+class Player extends GameObject {
+  constructor (sprite){
     super()
-    this.x = Math.random() * limit_w
-    this.y = Math.random() * limit_h
-    this.color = particle_color_variant[Math.ceil((Math.random() * particle_color_variant.length))]
-    this.move_to = this.move_to.bind(this)
-
-    this.instance = new PIXI.Graphics()
-    this.instance.beginFill(this.color, 0.5)
-    this.instance.drawCircle(x, y, 5)
-    this.instance.endFill()
-    app.stage.addChild(this.instance)
+    this.instance = new PIXI.Sprite.fromImage(sprite)
+    this.instance.anchor.set(0.5)
+    this.instance.x = window.innerWidth/2
+    this.instance.y = window.innerHeight/2
+    this.position = { x: 0, y: 0 }
 
   }
-  move_to(x, y){
-    this.instance.moveTo(x, y)
-  }
-
-  static generate(amount, limit_w, limit_h){
-    return Array(amount).fill(0).map(i => new Particle(limit_w, limit_h))
+  set_position(x, y){
+    this.position.x = x
+    this.position.y = y 
   }
 
 }
