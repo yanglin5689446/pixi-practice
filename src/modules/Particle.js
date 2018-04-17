@@ -9,27 +9,20 @@ class Particle extends GameObject {
   constructor (limit_h, limit_w){
     super()
     this.color = particle_color_variant[Math.ceil((Math.random() * particle_color_variant.length))]
-    this.move = this.move.bind(this)
-    
     this.instance = new PIXI.Graphics()
-    this.instance.beginFill(this.color, 0.5)
     this.instance.x = Math.random() * limit_w
     this.instance.y = Math.random() * limit_h
 
+    // function binding
+    this.draw = this.draw.bind(this)
+
+    this.draw()
+  }
+  draw(){
+    this.instance.beginFill(this.color, 0.5)
     this.instance.drawCircle(0, 0, 10)
-
     this.instance.endFill()
-
   }
-  move(dx, dy){
-    this.instance.x += dx
-    this.instance.y += dy
-  }
-
-  static generate(amount, limit_w, limit_h){
-    return Array(amount).fill(0).map(i => new Particle(limit_w, limit_h))
-  }
-
 }
 
 export default Particle
