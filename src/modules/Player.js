@@ -1,6 +1,6 @@
 
 import GameObject from './GameObject/GameObject'
-import World from './World'
+import Game from './Game'
 
 class Player extends GameObject {
   constructor (sprite, x, y){
@@ -8,15 +8,15 @@ class Player extends GameObject {
 
     this.instance = new PIXI.Sprite.fromImage(sprite)
     this.instance.anchor.set(0.5)
-    this.instance.x = x || Math.random() * World.instance.width
-    this.instance.y = y || Math.random() * World.instance.height
+    this.instance.x = x || Math.random() * Game.instance.world.width
+    this.instance.y = y || Math.random() * Game.instance.world.height
     this.score = 0
     this.body_radius = 500
     // position alias
     this.position = this.instance.position
 
     // function binding
-    this.update_position_according_to = this. update_position_according_to.bind(this)
+    this.update_status = this. update_status.bind(this)
     this.check_boundary = this. check_boundary.bind(this)
 
   }
@@ -26,18 +26,22 @@ class Player extends GameObject {
     if(this.position.x > world.width) this.position.x = world.width
     if(this.position.y > world.height) this.position.y = world.height
   }
-  update_position_according_to(mouse_delta){
+  update_status(mouse_delta){
+    // rotation
     this.instance.rotation = Math.atan2(mouse_delta.y, mouse_delta.x)
+    // movement direction
     let distance = Math.sqrt(mouse_delta.x * mouse_delta.x + mouse_delta.y * mouse_delta.y)
     let unit_vector = { x: mouse_delta.x/distance, y: mouse_delta.y/distance }
 
+    // movement speed
     if(distance < 50) this.speed = 0
-    else if(50 < distance && distance < 300) this.speed = 3
-    else if(300 < distance) this.speed = 6
+    else if(50 < distance && distance < 200) this.speed = 3
+    else if(200 < distance) this.speed = 6
     this.instance.position.x += this.speed * unit_vector.x 
     this.instance.position.y += this.speed * unit_vector.y
 
-    this.check_boundary(World.instance)
+    // check if object exceed boundary
+    this.check_boundary(Game.instance.world)
 
   }
 

@@ -1,31 +1,20 @@
 
-let instance = null
+import { canvas } from '../constants'
 
-const canvas = { width: window.innerWidth, height: window.innerHeight }
-
-class World extends PIXI.Application{
-  constructor(width, height, props){
-    super(props)
-        // singleton
-    if(!instance)instance = this
-    else return instance
-
+class World {
+  constructor(width, height){
     this.width = width || window.innerWidth
     this.height = height || window.innerHeight
-    this.view_port = { x:0, y:0 }
+    this.instance = new PIXI.Container()
 
     // function binding
+    this.add_object = this.add_object.bind(this)
+    this.add_objects = this.add_objects.bind(this)
+    this.remove_object = this.remove_object.bind(this)
+    this.exceed_boundary = this.exceed_boundary.bind(this)
     this.draw_borders = this.draw_borders.bind(this)
     this.draw_grids = this.draw_grids.bind(this)
-    this.add_object = this.add_object.bind(this)
 
-    // configuration
-    this.renderer.view.style.position = 'absolute';
-    this.renderer.view.style.display = 'block';
-    this.renderer.autoResize = true;
-    this.renderer.resize(canvas.width, canvas.height);
-    this.stage.interactive = true
-    this.mouse_position = { x: 0, y: 0 }
 
     // draw border
     this.draw_borders()
@@ -33,18 +22,14 @@ class World extends PIXI.Application{
 
   }
 
-  static get instance() {
-    return instance
-  }
-
   add_object(game_object){
-    this.stage.addChild(game_object.instance)
+    this.instance.addChild(game_object.instance)
   }
   add_objects(game_objects){
-    game_objects.forEach(game_object => this.stage.addChild(game_object.instance))
+    game_objects.forEach(game_object => this.instance.addChild(game_object.instance))
   }
   remove_object(game_object){
-    this.stage.removeChild(game_object.instance)
+    this.instance.removeChild(game_object.instance)
   }
 
   exceed_boundary(position){
@@ -54,11 +39,11 @@ class World extends PIXI.Application{
   draw_grids(){
     let grids = new PIXI.Graphics()
     grids.lineStyle(2, 0xBDBDBD)
-    for(let x = 0; x < this.width; x += 50)
+    for(let x = 0; x < this.width; x += 100)
        grids.moveTo(x, 0).lineTo(x, this.height)
-    for(let y = 0; y < this.height; y += 50)
+    for(let y = 0; y < this.height; y += 100)
        grids.moveTo(0, y).lineTo(this.width, y)    
-    this.stage.addChild(grids)
+    this.instance.addChild(grids)
   }
 
   draw_borders(){
@@ -70,22 +55,13 @@ class World extends PIXI.Application{
        .lineTo(this.width, 0)
        .lineTo(0, 0)
 
-    this.stage.addChild(borders)
+    this.instance.addChild(borders)
   }
 
   set viewport(vw){
-    this.stage.x = -vw.x + canvas.width/2
-    this.stage.y = -vw.y + canvas.height/2
+    this.instance.x = -vw.x + canvas.width/2
+    this.instance.y = -vw.y + canvas.height/2
   }
-
-
-  set game_loop(callback) {
-    this.ticker.add(callback)
-  }
-
-
-
-
 }
 
 export default World

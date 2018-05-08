@@ -5,6 +5,7 @@
   "author": "yanglin",
   "license": "ISC",
   "dependencies": {
+    "socket.io-client": "^2.1.0",
     "webpack": "^4.5.0"
   },
   "devDependencies": {
