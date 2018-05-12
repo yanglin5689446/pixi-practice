@@ -3,17 +3,20 @@ import GameObject from './GameObject/GameObject'
 import Game from './Game'
 
 class Player extends GameObject {
-  constructor (sprite, x, y){
+  constructor (sprite, initialize){
     super()
 
     this.instance = new PIXI.Sprite.fromImage(sprite)
     this.instance.anchor.set(0.5)
-    this.instance.x = x || Math.random() * Game.instance.world.width
-    this.instance.y = y || Math.random() * Game.instance.world.height
+    this.instance.x = initialize.x || 0
+    this.instance.y = initialize.y || 0
+
+    this.id = initialize.id || 0
     this.score = 0
     this.body_radius = 500
-    // position alias
+    // alias
     this.position = this.instance.position
+    this.rotation = this.instance.rotation
 
     // function binding
     this.update_status = this. update_status.bind(this)
