@@ -12,7 +12,7 @@ let game = new Game({ backgroundColor: 0xEEEEEE })
 document.body.appendChild(game.view);
 
 // create world
-game.create_world(5000, 5000)
+game.create_world(500, 500)
 
 // register mouse move event handler
 game.stage.on('mousemove', (e) => (game.mouse_position = e.data.global))
@@ -61,28 +61,31 @@ socket.on('render', (data) => {
 
   data.disconnected.forEach(key => delete players[key])
   // particles
-  data.objects.particles.forEach((particle, index) => {
-    
-    if(!particle){
-      if(particles[index])game.world.remove_object(particles[index])
+  const data_particles = data.objects.particles
+  data_particles.removals.forEach(index => { 
+    if(particles[index])
+      game.world.remove_object(particles[index])
+    particles[index] = null
+  })
+
+  data_particles.news.forEach((particle) => {
+    let new_particle = new Particle(particle.x, particle.y)
+    game.add_object(new_particle)
+    particles.push(new_particle)
+  })
+  particles.forEach((particle, index) => {
+    if(particle && player.distance_between(particle) < player.body_radius){
+      socket.emit('event', {
+        type: 'eat_particle',
+        payload: { index }
+      })      
     }
-    else{
-      particles[index].x = particle.x
-      particles[index].y = particle.y
-      if(player.distance_between(particles[index]) < player.body_radius){
-        socket.emit('event', { 
-          type: 'eat_particle', 
-          payload:{ index } 
-        })
-      }
-    }
-    
   })
 
   let mouse_delta = { x: game.mouse_position.x - origin.x, y: game.mouse_position.y - origin.y }
-  player.update_status(mouse_delta)
+  let delta = player.update_status(mouse_delta)
   socket.emit('event', { 
     type: 'update_position', 
-    payload:{ x: player.position.x, y: player.position.y, rotation: player.instance.rotation } 
+    payload:{ x: delta.x, y: delta.y, rotation: player.instance.rotation } 
   })
 })

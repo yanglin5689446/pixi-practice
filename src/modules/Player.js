@@ -40,11 +40,14 @@ class Player extends GameObject {
     if(distance < 50) this.speed = 0
     else if(50 < distance && distance < 200) this.speed = 3
     else if(200 < distance) this.speed = 6
+    let prev = { x: this.instance.position.x, y: this.instance.position.y }  
     this.instance.position.x += this.speed * unit_vector.x 
     this.instance.position.y += this.speed * unit_vector.y
 
     // check if object exceed boundary
     this.check_boundary(Game.instance.world)
+
+    return { x: this.instance.position.x - prev.x, y: this.instance.position.y - prev.y }
 
   }
 
