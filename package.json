@@ -15,6 +15,7 @@
   },
   "scripts": {
     "dev": "webpack-dev-server",
-    "build": "NODE_ENV=production webpack -p --progress"
+    "build": "webpack -p --progress --config=webpack.production.config.js",
+    "deploy": "scp build/app.js yanglin@140.113.67.102:/usr/share/nginx/html/pixi/app.js"
   }
 }

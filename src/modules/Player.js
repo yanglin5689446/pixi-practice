@@ -6,21 +6,38 @@ class Player extends GameObject {
   constructor (sprite, initialize){
     super()
 
-    this.instance = new PIXI.Sprite.fromImage(sprite)
-    this.instance.anchor.set(0.5)
-    this.instance.x = initialize.x || 0
-    this.instance.y = initialize.y || 0
-
     this.id = initialize.id || 0
     this.score = 0
     this.body_radius = 500
+    this.hp = initialize.hp
+    this.max_hp = initialize.max_hp
+    this.nickname = initialize.nickname
+
+
+    this.instance = new PIXI.Container()
+    this.instance.x = initialize.x || 0
+    this.instance.y = initialize.y || 0
+    
+    this.player_sprite = new PIXI.Sprite.fromImage(sprite)
+    this.player_sprite.anchor.set(0.5)
+    this.instance.addChild(this.player_sprite)
+    
+    this.nickname_text = new PIXI.Text(this.nickname, { fontSize: 12 });
+    this.nickname_text.anchor.set(0.5)
+    this.nickname_text.position.y = -60
+
+    this.instance.addChild(this.nickname_text)
+    
+    this.hp_bar = new PIXI.Graphics() 
+    this.instance.addChild(this.hp_bar)
+
     // alias
     this.position = this.instance.position
-    this.rotation = this.instance.rotation
 
     // function binding
-    this.update_status = this. update_status.bind(this)
-    this.check_boundary = this. check_boundary.bind(this)
+    this.update_status = this.update_status.bind(this)
+    this.check_boundary = this.check_boundary.bind(this)
+    this.render_hp_bar = this.render_hp_bar.bind(this)
 
   }
   check_boundary(world){
@@ -31,7 +48,7 @@ class Player extends GameObject {
   }
   update_status(mouse_delta){
     // rotation
-    this.instance.rotation = Math.atan2(mouse_delta.y, mouse_delta.x)
+    this.player_sprite.rotation = Math.atan2(mouse_delta.y, mouse_delta.x)
     // movement direction
     let distance = Math.sqrt(mouse_delta.x * mouse_delta.x + mouse_delta.y * mouse_delta.y)
     let unit_vector = { x: mouse_delta.x/distance, y: mouse_delta.y/distance }
@@ -48,7 +65,25 @@ class Player extends GameObject {
     this.check_boundary(Game.instance.world)
 
     return { x: this.instance.position.x - prev.x, y: this.instance.position.y - prev.y }
+  }
+  render_hp_bar(){
+    const origin = { x: -40, y: -50}, w = 80, h = 10, ratio = (this.hp / this.max_hp)
 
+    this.hp_bar.beginFill(0xFF0000)
+    this.hp_bar.lineStyle(0, 0, 0);
+
+    this.hp_bar.moveTo(origin.x, origin.y);
+    this.hp_bar.lineTo(origin.x + w, origin.y);
+    this.hp_bar.lineTo(origin.x + w, origin.y + h);
+    this.hp_bar.lineTo(origin.x, origin.y + h);
+    this.hp_bar.lineTo(origin.x, origin.y);
+
+    this.hp_bar.beginFill(0x8BC34A)
+    this.hp_bar.moveTo(origin.x, origin.y);
+    this.hp_bar.lineTo(origin.x + w * ratio, origin.y);
+    this.hp_bar.lineTo(origin.x + w * ratio, origin.y + h);
+    this.hp_bar.lineTo(origin.x, origin.y + h);
+    this.hp_bar.lineTo(origin.x, origin.y);
   }
 
 

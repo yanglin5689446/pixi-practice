@@ -2,14 +2,42 @@
 <html>
 <head>
 	<meta charset="utf-8">
+	<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/4.7.3/pixi.min.js" integrity="sha256-IaosorArzcLZU/NxXv80G1+tylfSRsCNHJIKNpcIR2A=" crossorigin="anonymous"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/engine.io-client/3.2.1/engine.io.min.js"></script>
 	<title>pixi practice</title>
 	<style>
 		body { padding: 0; margin: 0; }
+		.background {
+			background: #E3E3E3;
+			height: 100vh; 
+			width: 100vw;
+		}
+		.login-panel{
+			width: 500px;
+			height: 180px;
+			position: relative;
+			top: 35vh;
+			background: white;
+			border: 2px solid #343a40;
+		}
 	</style>
 </head>
 <body>
-	<script type="text/javascript" src='app.js'></script>
+	<div class="background" id="login-panel">
+		<div class="card login-panel mx-auto p5">
+			<div class="card-header bg-dark text-white">登入</div>
+			<div class="card-body">
+				<p class="card-text">輸入暱稱以開始遊戲</p>
+				<div class="input-group">
+					<input type="text" id="nickname" class="form-control" placeholder="輸入暱稱" />
+					<div class="input-group-append">
+						<button class="btn btn-success" id="submit_button">OK</button>
+					</div>
+				</div>
+				<div class="input-group"></div>
+			</div>
+		</div>
+	</div>
 </body>
 </html>
