@@ -33,6 +33,9 @@ class Game extends PIXI.Application {
   static get instance() {
     return instance
   }
+  set game_loop(callback) {
+    this.ticker.add(callback)
+  }
 
 }
 
