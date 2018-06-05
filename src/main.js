@@ -1,7 +1,11 @@
 
+import * as PIXI from 'pixi.js'
 import io from 'socket.io-client'
 
 import { preload_assets, preload_complete } from './loader'
+import { keyup_listener, keydown_listener } from './keyboard'
+import { filters } from './Effects/filters'
+
 
 import Game from './modules/Game'
 import { MainTower, SubTower } from './modules/Tower'
@@ -15,7 +19,7 @@ import { origin, canvas } from './constants'
 let game
 
 let player
-let players = []
+let other_players = []
 let particles = []
 let buffer = {}
 let towers = { fox: {}, panda:{} }
@@ -23,65 +27,58 @@ let towers = { fox: {}, panda:{} }
 let socket
 
 
-function game_loop(){
+function game_loop(delta){
   // update player position
 
-  player.update(buffer.players[player.id]);
-  game.panel.update_score(player.score)
+  const { panel, player, world } = game
 
-  game.world.viewport = player.position
+  player.update(buffer.players[player.id]);
+
+  panel.update_score(player.score)
+  panel.mini_map.update(player.position)
+
+  world.viewport = player.position
   
   // update other objects
   // other player
   Object.keys(buffer.players).forEach(key => {
-    if(key == player.id)return
-    if(!players[key]){
-      players[key] = new NPC(buffer.players[key])
-      game.world.add_object(players[key])
+    if(key == player.id)return;
+    if(!other_players[key]){
+      other_players[key] = new NPC(buffer.players[key])
+      world.add_object(other_players[key])
     }
-    else players[key].update_status(buffer.players[key])
+    else other_players[key].update_status(buffer.players[key])
   })
 
   buffer.disconnected.forEach(key => {
-    if(players[key])
-      game.world.remove_object(players[key])
-    delete players[key]
-  })
-  // particles
-  const data_particles = buffer.objects.particles
-  data_particles.removals.forEach(index => { 
-    if(particles[index])
-      game.world.remove_object(particles[index])
-    particles[index] = null
+    if(other_players[key])
+      world.remove_object(other_players[key])
+    delete other_players[key]
   })
 
-  data_particles.news.forEach((particle) => {
-    let new_particle = new Particle(particle.x, particle.y)
-    game.world.add_object(new_particle)
-    particles.push(new_particle)
-  })
-  particles.forEach((particle, index) => {
-    if(particle && player.distance_between(particle) < player.body_radius){
-      socket.emit('event', {
-        type: 'eat_particle',
-        payload: { index }
-      })      
-    }
-  })
   // towers
   towers.fox.main.hp = buffer.objects.towers.fox.main.hp
   towers.fox.main.render_hp_bar()
 
-  let mouse_delta = { x: game.mouse_position.x - origin.x, y: game.mouse_position.y - origin.y }
-  let delta = player.update_by_cursor_position(mouse_delta)
   socket.emit('event', { 
     type: 'update_position', 
-    payload:{ x: delta.x, y: delta.y, facing: player.facing } 
+    payload:{ 
+      x: player.position.x, 
+      y: player.position.y, 
+      facing: player.facing,
+      speed: player.speed,
+      moved: player.does_moved
+    } 
   })
 }
 
-function start_connection(){
+function initialize_game(){
   let nickname = document.getElementById('nickname').value
+
+  // keyboard event binding
+  document.addEventListener('keydown', keydown_listener)
+  document.addEventListener('keyup', keyup_listener)
+
   
   socket = io(SERVER, {transports: ['websocket'], upgrade: false});
 
@@ -93,19 +90,15 @@ function start_connection(){
     // register mouse move event handler
     game.stage.on('mousemove', (e) => (game.mouse_position = e.data.global))
 
-    player = new Player(data.player)
-    game.world.add_object(player)
-    game.world.viewport = player.position
+    // set up player
+    game.create_player(data.player)
 
 
-    // initialize object
-    particles = data.objects.particles.map(particle => 
-      particle ? new Particle(particle.x, particle.y) : null)
-    game.world.add_objects(particles.filter(particle => particle))
-
-    towers.fox.main = new MainTower(300, 3000/2)
-    towers.fox.main.onMouseDown = (e) => 
+    towers.fox.main = new MainTower(300, game.world.height/2)
+    towers.fox.main.onMouseDown = (e) => {
+      towers.fox.main.under_attack()
       socket.emit('interact', { type: 'click', payload: 'fox_main' })
+    }
     towers.fox.top = new SubTower(300, game.world.height/4)
     towers.fox.bottom = new SubTower(300, game.world.height*3/4)
     towers.panda.main = new MainTower(game.world.width - 300, game.world.height/2)
@@ -120,7 +113,7 @@ function start_connection(){
     game.world.add_object(towers.panda.bottom)
 
     // initialize score
-    game.panel.update_score(player.score)
+    game.panel.update_score(game.player.score)
 
     // connect 
     game.game_loop = game_loop
@@ -133,14 +126,27 @@ function start_connection(){
   socket.on('update', (data) => (buffer = data))
 
   // emit initialize event
-  socket.emit('initialize', { nickname: nickname || 'anonymous' })
+  let team = 0
+  if(document.getElementById('team_fox').checked)team = 1
+  else if(document.getElementById('team_panda').checked)team = 2
+  else team = Math.ceil(Math.random() * 2)
+
+  socket.emit('initialize', { nickname: nickname || 'anonymous', team })
 }  
 
 
 
 window.onload = () => {
-  document.getElementById('submit_button').addEventListener('click', start_connection)
+  document.getElementById('submit_button').addEventListener('click', initialize_game)
   preload_assets()
+  window.addEventListener('resize', () => {
+    // Resize the renderer
+    canvas.width = window.innerWidth
+    canvas.height =  window.innerHeight 
+    game.renderer.resize(window.innerWidth, window.innerHeight);
+    if(game.player)
+      game.world.viewport = game.player.position
+  })
 }
 
 

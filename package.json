@@ -5,6 +5,9 @@
   "author": "yanglin",
   "license": "ISC",
   "dependencies": {
+    "@pixi/filter-outline": "^2.6.0",
+    "pixi-filters": "^2.6.1",
+    "pixi.js": "^4.7.3",
     "socket.io-client": "^2.1.0",
     "webpack": "^4.5.0"
   },

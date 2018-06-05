@@ -1,4 +1,6 @@
 
+import * as PIXI from 'pixi.js'
+
 import { canvas } from '../constants'
 
 class World {

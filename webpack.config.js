@@ -4,12 +4,12 @@ var HtmlWebpackPlugin = require("html-webpack-plugin")
 
 module.exports = {
   entry: {
-    app: ["./src/app.js"]
+    main: ["./src/main.js"]
   },
   output: {
     path: path.resolve(__dirname, "build"),
     publicPath: "/",
-    filename: "app.js"
+    filename: "main.js"
   },
   devServer: {
     contentBase: path.join(__dirname, "src"),

@@ -1,13 +1,19 @@
 
+import * as PIXI from 'pixi.js'
+
 import Character from './Character'
 import Game from './Game'
+import { key_pressed, keycode_map } from '../keyboard'
 
 class Player extends Character {
   constructor (initialize){
     super(initialize)
+    this.speed = 5
+    this.attack_range = 200
 
     // function binding
-    this.update_by_cursor_position = this.update_by_cursor_position.bind(this)
+    this._update_position = this._update_position.bind(this)
+    this.update = this.update.bind(this)
     this.check_boundary = this.check_boundary.bind(this)
 
   }
@@ -15,42 +21,74 @@ class Player extends Character {
     if(this.position.x < 0) this.position.x = 0
     if(this.position.y < 0) this.position.y = 0
     if(this.position.x > world.width) this.position.x = world.width
-    if(this.position.y > world.height) this.position.y = world.height
+    // assume player sprite height is around 100
+    if(this.position.y > world.height - 50) this.position.y = world.height - 50
+  }
+  _update_position(){
+    this.does_moved = false
+    let facing
+    let sqrt2 = Math.sqrt(2)
+
+    if(key_pressed[keycode_map['w']] && key_pressed[keycode_map['a']]){
+      facing = 'left'
+      this.position.x -= this.speed / sqrt2
+      this.position.y -= this.speed / sqrt2
+      this.does_moved = true
+    }
+    else if(key_pressed[keycode_map['w']] && key_pressed[keycode_map['d']]){
+      facing = 'right'
+      this.position.x += this.speed / sqrt2
+      this.position.y -= this.speed / sqrt2
+      this.does_moved = true
+    }
+    else if(key_pressed[keycode_map['s']] && key_pressed[keycode_map['a']]){
+      facing = 'left'
+      this.position.x -= this.speed / sqrt2
+      this.position.y += this.speed / sqrt2
+      this.does_moved = true
+    }
+    else if(key_pressed[keycode_map['s']] && key_pressed[keycode_map['d']]){
+      facing = 'right'
+      this.position.x += this.speed / sqrt2
+      this.position.y += this.speed / sqrt2
+      this.does_moved = true
+    }
+    else if(key_pressed[keycode_map['w']]){
+      facing = 'up'
+      this.position.y -= this.speed
+      this.does_moved = true
+    }
+    else if(key_pressed[keycode_map['s']]){
+      facing = 'down'
+      this.position.y += this.speed
+      this.does_moved = true
+    }
+    else if(key_pressed[keycode_map['a']]){
+      facing = 'left'
+      this.position.x -= this.speed
+      this.does_moved = true
+    }
+    else if(key_pressed[keycode_map['d']]){
+      facing = 'right'
+      this.position.x += this.speed
+      this.does_moved = true
+    }
+    this.set_facing(facing)
+    if(!this.does_moved){
+      this.sprite.animationSpeed = 0
+      this.sprite.gotoAndPlay(0)
+    }
+    else 
+      this.sprite.animationSpeed = Character.prototype.base_animation_factor * this.speed
+    this.check_boundary(Game.instance.world)
   }
   update(data){
-    this.position.x = data.x
-    this.position.y = data.y
     this.score = data.score
     this.hp = data.hp
     this.render_hp_bar()
+    this._update_position()
   }
-  update_by_cursor_position(mouse_delta){
-    // facing
-    let angle = Math.atan2(mouse_delta.y, mouse_delta.x) + Math.PI
-    if(Math.PI/4 < angle && angle < Math.PI*3/4)this.set_facing('up')
-    else if(Math.PI*5/4 < angle && angle < Math.PI*7/4)this.set_facing('down')
-    else if(Math.PI*3/4 < angle && angle < Math.PI*5/4)this.set_facing('right')
-    else this.set_facing('left')
-    // movement facing
-    let distance = Math.sqrt(mouse_delta.x * mouse_delta.x + mouse_delta.y * mouse_delta.y)
-    let unit_vector = { x: mouse_delta.x/distance, y: mouse_delta.y/distance }
-
-    // movement speed
-    if(distance < 50) this.speed = 0
-    else if(50 < distance && distance < 200) this.speed = 3
-    else if(200 < distance) this.speed = 6
-    let prev = { x: this.instance.position.x, y: this.instance.position.y }  
-
-    this.player_sprite.animationSpeed = 0.05 * this.speed / 3
-    this.instance.position.x += this.speed * unit_vector.x 
-    this.instance.position.y += this.speed * unit_vector.y
-
-    // check if object exceed boundary
-    this.check_boundary(Game.instance.world)
-
-    return { x: this.instance.position.x - prev.x, y: this.instance.position.y - prev.y }
-  }
-
 }
+
 
 export default Player

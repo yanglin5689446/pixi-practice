@@ -1,14 +1,24 @@
 
+import * as PIXI from 'pixi.js'
+import { setup_animations } from './Effects/animations'
+import { setup_filters } from './Effects/filters'
+
 let complete = false
 
 const preload_assets = () => {
   const loader = PIXI.loader
   PIXI.loader
     .add('fox',  'assets/images/fox.png')
-    .add('fox_minon',  'assets/images/fox_minon.png')
+    .add('panda',  'assets/images/panda.png')
+    .add('fox_minion',  'assets/images/fox_minion.png')
     .add('main_tower',  'assets/images/main_tower.png')
     .add('sub_tower',  'assets/images/sub_tower.png')
-    .load(() => (complete = true));
+    .add('normal_attack',  'assets/images/attack.png')
+    .load(() => {
+      setup_animations()
+      setup_filters()
+      complete = true
+    });
 }
 
 const preload_compelete = () => complete

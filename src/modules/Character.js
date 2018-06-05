@@ -1,7 +1,10 @@
 
+import * as PIXI from 'pixi.js'
 
 import GameObject from './GameObject/GameObject'
 import Game from './Game'
+
+import { animations } from '../Effects/animations'
 
 class Character extends GameObject {
   constructor (initialize){
@@ -10,10 +13,10 @@ class Character extends GameObject {
     this.id = initialize.id || 0
     this.score = 0
     this.body_radius = 80
-    this.attack_range = 200
     this.hp = initialize.hp
     this.max_hp = initialize.max_hp
     this.nickname = initialize.nickname || 'anonymous'
+    this.team = initialize.team || 1
     this.facing = 'down'
 
     this.instance = new PIXI.Container()
@@ -21,25 +24,12 @@ class Character extends GameObject {
     this.instance.y = initialize.y || 0
     
     // player sprite initialize
-    let sprite = new PIXI.Sprite(PIXI.loader.resources["fox"].texture)
+    this.module = this.team == 1 ? animations.fox : animations.panda
+    this.sprite = new PIXI.extras.AnimatedSprite(this.module.up)
+    this.sprite.anchor.set(0.5)
+    this.sprite.scale.set(0.5)
 
-    let frames = []
-    let frame_width = sprite.width/4, frame_height = sprite.height/4
-    for(let i = 0; i < 4 ; i ++){
-      for(let j = 0; j < 4 ;j ++){
-        let clip = new PIXI.Rectangle(frame_width * j, frame_height * i, frame_width, frame_height)
-        frames.push(new PIXI.Texture(sprite.texture, clip))   
-      }
-    }
-
-    this.player_sprite = new PIXI.extras.AnimatedSprite(frames)
-    this.player_sprite.anchor.set(0.5)
-    this.player_sprite.scale.set(0.5)
-
-    this.player_sprite.animationSpeed = 0.05
-    this.player_sprite.loop = false
-
-    this.instance.addChild(this.player_sprite)
+    this.instance.addChild(this.sprite)
     
     // nickname label initialize
     this.nickname_text = new PIXI.Text(this.nickname, { fontSize: 12 });
@@ -82,34 +72,13 @@ class Character extends GameObject {
   set_facing(facing){
     if(this.facing === facing)return;
     this.facing = facing
-    switch(facing){
-      case 'up':
-        this.player_sprite.onFrameChange = (frame) => 
-            frame === 4 && this.player_sprite.gotoAndPlay(0)
-        this.player_sprite.onComplete = null
-        this.player_sprite.gotoAndPlay(0)
-
-        break
-      case 'down':
-        this.player_sprite.onFrameChange = (frame) => 
-            frame === 8 && this.player_sprite.gotoAndPlay(4)
-        this.player_sprite.onComplete = null
-        this.player_sprite.gotoAndPlay(4)
-
-        break
-      case 'left':
-        this.player_sprite.onFrameChange = (frame) => 
-            frame === 12 && this.player_sprite.gotoAndPlay(8)
-        this.player_sprite.onComplete = null
-        this.player_sprite.gotoAndPlay(8)
-        break
-      case 'right':
-        this.player_sprite.onFrameChange = null
-        this.player_sprite.onComplete = () => this.player_sprite.gotoAndPlay(12)
-        this.player_sprite.gotoAndPlay(12)
-        break
+    if(this.module[facing]){
+      this.sprite.textures = this.module[facing]
+      this.sprite.play()
     }
   }
 }
+
+Character.prototype.base_animation_factor = 0.02
 
 export default Character
