@@ -35,7 +35,7 @@ function game_loop(delta){
   player.update(buffer.players[player.id]);
 
   panel.update_score(player.score)
-  panel.mini_map.update(player.position)
+  panel.mini_map.update(player.position, player.team)
 
   world.viewport = player.position
   

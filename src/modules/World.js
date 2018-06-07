@@ -15,9 +15,13 @@ class World {
     this.remove_object = this.remove_object.bind(this)
     this.exceed_boundary = this.exceed_boundary.bind(this)
     this.draw_borders = this.draw_borders.bind(this)
+	
+	//this.add_ground = this.add_ground.bind(this)
 
     // draw border
     this.draw_borders()
+	
+	this.add_ground()
 
   }
 
@@ -47,6 +51,15 @@ class World {
     this.instance.addChild(borders)
   }
 
+  add_ground(){
+	  let ground = new PIXI.Sprite.fromImage('../assets/images/ground.jpg')
+	  ground.position.x = 5000
+	  ground.position.y = 1500
+	  ground.anchor.x = 0.5
+	  ground.anchor.y = 0.5
+	  this.instance.addChild(ground)
+  }
+  
   set viewport(vw){
     this.instance.x = -vw.x + canvas.width/2
     this.instance.y = -vw.y + canvas.height/2
