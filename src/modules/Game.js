@@ -28,12 +28,17 @@ class Game extends PIXI.Application {
   }
   create_world(w = 3000, h = 3000){
     this.world = new World(w, h)
-    this.stage.addChildAt(this.world.instance, this.stage.children.length -1 )
+    this.stage.addChildAt(this.world.instance)
   }
   create_player(data){
     this.player = new Player(data)
     this.world.add_object(this.player)
     this.world.viewport = this.player.position
+  }
+  create_panel(player){
+    this.panel = new Panel(player)
+    this.panel.update_score(player.score)
+    this.stage.addChild(this.panel.instance)
   }
 
   static get instance() {

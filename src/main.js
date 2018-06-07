@@ -90,13 +90,11 @@ function initialize_game(){
     // register mouse move event handler
     game.stage.on('mousemove', (e) => (game.mouse_position = e.data.global))
 
-    // set up player
+    // inistialize player
     game.create_player(data.player)
 
-    // initialize score
-    game.panel = new Panel(game.player)
-    game.panel.update_score(game.player.score)
-    game.stage.addChild(game.panel.instance)
+    // initialize panel
+    game.create_panel(game.player)
 
     // set up objects
     towers.fox.main = new MainTower(300, game.world.height/2)

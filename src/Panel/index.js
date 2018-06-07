@@ -5,22 +5,19 @@ import Scoreboard from './Scoreboard'
 
 
 class Panel {
-  constructor(){
+  constructor(player){
 	  this.instance = new PIXI.Container()
-
-    //function binding
-    this.create_countdown = this.create_countdown.bind(this)
-    
-    this.update_score = this.update_score.bind(this)
-    this.create_score = this.create_score.bind(this)
 
     this.scoreboard = new Scoreboard(canvas.width - 250, 50)
     this.instance.addChild(this.scoreboard.instance)
-    this.mini_map = new MiniMap(50, canvas.height - 200)
+    this.mini_map = new MiniMap(50, canvas.height - 200, player.team)
     this.instance.addChild(this.mini_map.instance)
 
+    //function binding
+    this.update_score = this.update_score.bind(this)
+
     // setup
-    this.create_score()
+    this.create_score(player.team)
 
     this.update_score(0)
   }
@@ -32,8 +29,8 @@ class Panel {
     this.countdown_text.y = 50
     this.instance.addChild(this.countdown_text)
   }
-  create_score(){
-    this.score_text = new PIXI.Text('')
+  create_score(player){
+    this.score_text = new PIXI.Text(player.score)
     this.score_text.x = 20
     this.score_text.y = 20
     this.instance.addChild(this.score_text)

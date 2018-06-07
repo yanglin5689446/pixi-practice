@@ -14,6 +14,10 @@ const preload_assets = () => {
     .add('main_tower',  'assets/images/main_tower.png')
     .add('sub_tower',  'assets/images/sub_tower.png')
     .add('normal_attack',  'assets/images/attack.png')
+    .add('minimap',  'assets/images/minimap.jpg')
+    .add('fox_icon',  'assets/images/fox_icon.png')
+    .add('panda_icon',  'assets/images/panda_icon.png')
+
     .load(() => {
       setup_animations()
       setup_filters()
