@@ -16,9 +16,6 @@ class Game extends PIXI.Application {
     if(!instance)instance = this
     else return instance
 
-    this.panel = new Panel()
-    this.stage.addChild(this.panel.instance)
-
     // configuration
     this.renderer.view.style.position = 'absolute';
     this.renderer.view.style.display = 'block';

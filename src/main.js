@@ -93,7 +93,12 @@ function initialize_game(){
     // set up player
     game.create_player(data.player)
 
+    // initialize score
+    game.panel = new Panel(game.player)
+    game.panel.update_score(game.player.score)
+    game.stage.addChild(game.panel.instance)
 
+    // set up objects
     towers.fox.main = new MainTower(300, game.world.height/2)
     towers.fox.main.onMouseDown = (e) => {
       towers.fox.main.under_attack()
@@ -112,12 +117,12 @@ function initialize_game(){
     game.world.add_object(towers.panda.top)
     game.world.add_object(towers.panda.bottom)
 
-    // initialize score
-    game.panel.update_score(game.player.score)
 
-    // connect 
+
+    // start game loop
     game.game_loop = game_loop
 
+    // hide login interface
     document.getElementById('login-panel').setAttribute('hidden', 'hidden')
     document.body.replaceChild(game.view, document.body.childNodes[0])
   })

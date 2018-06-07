@@ -6,12 +6,14 @@ class Scoreboard {
     this.instance = new PIXI.Container()
     this.instance.x = x
     this.instance.y = y
+    
     // instance background
     let graphics = new PIXI.Graphics()
     graphics.beginFill(0xFFFFFF)
     graphics.lineStyle(3, 0x2196F3)
     graphics.drawRect(0, 0, 200, 360)
     this.instance.addChild(graphics)
+    
     // instance field
     let player_name = new PIXI.Text('Name', { fontSize: 16 })
     player_name.anchor.set(0.5)
