@@ -9,9 +9,9 @@ class Scoreboard {
     
     // instance background
     let graphics = new PIXI.Graphics()
-    graphics.beginFill(0xFFFFFF)
-    graphics.lineStyle(3, 0x2196F3)
-    graphics.drawRect(0, 0, 200, 360)
+    graphics.beginFill(0xFFFFFF, 0.7)
+    graphics.lineStyle(0)
+    graphics.drawRoundedRect(0, 0, 200, 360, 10)
     this.instance.addChild(graphics)
     
     // instance field
