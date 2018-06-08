@@ -1,7 +1,5 @@
 
-import * as PIXI from 'pixi.js'
-
-import { canvas } from '../constants'
+import { canvas } from '../../constants'
 
 class World {
   constructor(width, height){
@@ -16,12 +14,10 @@ class World {
     this.exceed_boundary = this.exceed_boundary.bind(this)
     this.draw_borders = this.draw_borders.bind(this)
 	
-	//this.add_ground = this.add_ground.bind(this)
-
     // draw border
     this.draw_borders()
 	
-	this.add_ground()
+    this.add_ground()
 
   }
 
@@ -52,7 +48,7 @@ class World {
   }
 
   add_ground(){
-	  let ground = new PIXI.Sprite.fromImage('../assets/images/ground.jpg')
+	  let ground = new PIXI.Sprite(PIXI.loader.resources["ground"].texture)
 	  ground.position.x = 5000
 	  ground.position.y = 1500
 	  ground.anchor.x = 0.5

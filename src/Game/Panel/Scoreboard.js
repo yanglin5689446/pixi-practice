@@ -1,5 +1,5 @@
 
-import { canvas } from '../constants'
+import { canvas } from '../../constants'
 
 class Scoreboard {
   constructor(x, y){

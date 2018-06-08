@@ -9,14 +9,15 @@ const preload_assets = () => {
   const loader = PIXI.loader
   PIXI.loader
     .add('fox',  'assets/images/fox.png')
-    .add('panda',  'assets/images/panda.png')
+    .add('fox_icon',  'assets/images/fox_icon.png')
     .add('fox_minion',  'assets/images/fox_minion.png')
+    .add('panda',  'assets/images/panda.png')
+    .add('panda_icon',  'assets/images/panda_icon.png')
     .add('main_tower',  'assets/images/main_tower.png')
     .add('sub_tower',  'assets/images/sub_tower.png')
     .add('normal_attack',  'assets/images/attack.png')
+    .add('ground',  'assets/images/ground.jpg')
     .add('minimap',  'assets/images/minimap.jpg')
-    .add('fox_icon',  'assets/images/fox_icon.png')
-    .add('panda_icon',  'assets/images/panda_icon.png')
 
     .load(() => {
       setup_animations()

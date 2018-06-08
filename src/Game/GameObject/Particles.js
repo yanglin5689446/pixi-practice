@@ -1,7 +1,5 @@
 
-import * as PIXI from 'pixi.js'
-
-import GameObject from './GameObject/GameObject'
+import GameObject from './index'
 
 const particle_color_variant = [0xFFA000, 0xFF3D00, 0x64DD17, 0x2E7D32, 0x4DB6AC, 0x01579B, 0xD50000, 0x512DA8, 0xE91E63]
 

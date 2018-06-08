@@ -1,10 +1,8 @@
 
 import * as PIXI from 'pixi.js'
 
-import GameObject from './GameObject/GameObject'
-import Game from './Game'
-
-import { animations } from '../Effects/animations'
+import GameObject from '../index'
+import { animations } from '../../../Effects/animations'
 
 class Character extends GameObject {
   constructor (initialize){
@@ -19,7 +17,6 @@ class Character extends GameObject {
     this.team = initialize.team || 1
     this.facing = 'down'
 
-    this.instance = new PIXI.Container()
     this.instance.x = initialize.x || 0
     this.instance.y = initialize.y || 0
     
@@ -77,8 +74,9 @@ class Character extends GameObject {
       this.sprite.play()
     }
   }
+  static base_animation_factor(){
+    return 0.02
+  }
 }
-
-Character.prototype.base_animation_factor = 0.02
 
 export default Character

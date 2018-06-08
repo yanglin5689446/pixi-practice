@@ -1,9 +1,8 @@
 
-import * as PIXI from 'pixi.js'
+import Character from '../index'
+import Game from '../../../index.js'
 
-import Character from './Character'
-import Game from './Game'
-import { key_pressed, keycode_map } from '../keyboard'
+import { key_pressed, keycode_map } from '../../../../keyboard'
 
 class Player extends Character {
   constructor (initialize){
@@ -79,7 +78,7 @@ class Player extends Character {
       this.sprite.gotoAndPlay(0)
     }
     else 
-      this.sprite.animationSpeed = Character.prototype.base_animation_factor * this.speed
+      this.sprite.animationSpeed = Character.base_animation_factor() * this.speed
     this.check_boundary(Game.instance.world)
   }
   update(data){

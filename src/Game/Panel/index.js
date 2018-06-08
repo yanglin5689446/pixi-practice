@@ -1,5 +1,5 @@
 
-import { canvas } from '../constants'
+import { canvas } from '../../constants'
 import MiniMap from './MiniMap'
 import Scoreboard from './Scoreboard'
 
