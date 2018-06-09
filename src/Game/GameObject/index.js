@@ -1,7 +1,10 @@
+    
+import 'pixi-layers'
+import Game from '../index'
 
 class GameObject {
 	constructor(){
-    this.instance = new PIXI.Container()
+    this.renderer = new PIXI.Container()
     this.apply_animation = this.apply_animation.bind(this)
     this.apply_filter = this.apply_filter.bind(this)
   }
@@ -10,8 +13,8 @@ class GameObject {
     animation.anchor.set(0.5)
     animation.animationSpeed = 0.5
     animation.loop = false
-    animation.onComplete = () => this.instance.removeChild(animation)
-    this.instance.addChild(animation)
+    animation.onComplete = () => this.renderer.removeChild(animation)
+    this.renderer.addChild(animation)
     animation.play()
   }
   apply_filter(filter_name){

@@ -8,9 +8,9 @@ class Particle extends GameObject {
   constructor (x, y){
     super()
     this.color = particle_color_variant[Math.ceil((Math.random() * particle_color_variant.length))]
-    this.instance = new PIXI.Graphics()
-    this.instance.x = x
-    this.instance.y = y
+    this.renderer = new PIXI.Graphics()
+    this.renderer.x = x
+    this.renderer.y = y
 
     // function binding
     this.draw = this.draw.bind(this)
@@ -18,9 +18,9 @@ class Particle extends GameObject {
     this.draw()
   }
   draw(){
-    this.instance.beginFill(this.color, 0.5)
-    this.instance.drawCircle(0, 0, 10)
-    this.instance.endFill()
+    this.renderer.beginFill(this.color, 0.5)
+    this.renderer.drawCircle(0, 0, 10)
+    this.renderer.endFill()
   }
 }
 

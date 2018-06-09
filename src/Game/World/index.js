@@ -1,13 +1,16 @@
 
+import 'pixi-layers'
 import { canvas } from '../../constants'
 
 class World {
   constructor(width, height){
     this.width = width || window.innerWidth
     this.height = height || window.innerHeight
-    this.instance = new PIXI.Container()
+    this.renderer = new PIXI.display.Stage()
+    this.renderer.group.enableSort = true
+    this.renderer.group.on('sort', (object) => (object.zOrder = -object.y))
 
-    // function binding
+    // function bindingws
     this.add_object = this.add_object.bind(this)
     this.add_objects = this.add_objects.bind(this)
     this.remove_object = this.remove_object.bind(this)
@@ -22,13 +25,13 @@ class World {
   }
 
   add_object(game_object){
-    this.instance.addChild(game_object.instance)
+    this.renderer.addChild(game_object.renderer)
   }
   add_objects(game_objects){
-    game_objects.forEach(game_object => this.instance.addChild(game_object.instance))
+    game_objects.forEach(game_object => this.renderer.addChild(game_object.renderer))
   }
   remove_object(game_object){
-    this.instance.removeChild(game_object.instance)
+    this.renderer.removeChild(game_object.renderer)
   }
 
   exceed_boundary(position){
@@ -37,28 +40,24 @@ class World {
 
   draw_borders(){
     let borders = new PIXI.Graphics()
-    borders.lineStyle(2, 0xBDBDBD)
+    borders.lineStyle(10, 0x777777)
        .moveTo(0, 0)
        .lineTo(0, this.height)
        .lineTo(this.width, this.height)
        .lineTo(this.width, 0)
        .lineTo(0, 0)
 
-    this.instance.addChild(borders)
+    this.renderer.addChild(borders)
   }
 
   add_ground(){
 	  let ground = new PIXI.Sprite(PIXI.loader.resources["ground"].texture)
-	  ground.position.x = 5000
-	  ground.position.y = 1500
-	  ground.anchor.x = 0.5
-	  ground.anchor.y = 0.5
-	  this.instance.addChild(ground)
+	  this.renderer.addChild(ground)
   }
   
   set viewport(vw){
-    this.instance.x = -vw.x + canvas.width/2
-    this.instance.y = -vw.y + canvas.height/2
+    this.renderer.x = -vw.x + canvas.width/2
+    this.renderer.y = -vw.y + canvas.height/2
   }
 
 }

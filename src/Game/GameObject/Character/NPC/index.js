@@ -16,8 +16,8 @@ class NPC extends Character {
     }
     else 
       this.sprite.animationSpeed = Character.base_animation_factor() * data.speed
-    this.instance.x = data.x
-    this.instance.y = data.y
+    this.renderer.x = data.x
+    this.renderer.y = data.y
     this.hp = data.hp
     this.set_facing(data.facing)
 

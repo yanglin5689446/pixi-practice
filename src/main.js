@@ -6,13 +6,12 @@ import { keyup_listener, keydown_listener } from './keyboard'
 import { filters } from './Effects/filters'
 
 import Game from './Game'
-import NPC from './Game/GameObject/Character/NPC'
 
 import socket from './socket'
 import { origin, canvas } from './constants'
 
 // player setup
-let game 
+let game = null
 
 function game_loop(delta){
   // update player position
@@ -79,7 +78,7 @@ function initialize_game(){
   let team = 0
   if(document.getElementById('team_fox').checked)team = 1
   else if(document.getElementById('team_panda').checked)team = 2
-  else team = Math.ceil(Math.random() * 2)
+  else team = Math.ceil(Math.random() * 2 )
 
   socket.emit('initialize', { nickname: nickname || 'anonymous', team })
 }  
@@ -91,9 +90,10 @@ window.onload = () => {
     // Resize the renderer
     canvas.width = window.innerWidth
     canvas.height =  window.innerHeight 
-    game.renderer.resize(window.innerWidth, window.innerHeight);
-    if(game.player)
-      game.world.viewport = game.player.position
+    if(game){
+      game.renderer.resize(window.innerWidth, window.innerHeight);
+      game.world.viewport = game.player.position      
+    }
   })
 }
 

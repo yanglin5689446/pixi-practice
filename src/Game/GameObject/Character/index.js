@@ -17,8 +17,8 @@ class Character extends GameObject {
     this.team = initialize.team || 1
     this.facing = 'down'
 
-    this.instance.x = initialize.x || 0
-    this.instance.y = initialize.y || 0
+    this.renderer.x = initialize.x || 0
+    this.renderer.y = initialize.y || 0
     
     // player sprite initialize
     this.module = this.team == 1 ? animations.fox : animations.panda
@@ -26,22 +26,22 @@ class Character extends GameObject {
     this.sprite.anchor.set(0.5)
     this.sprite.scale.set(0.5)
 
-    this.instance.addChild(this.sprite)
+    this.renderer.addChild(this.sprite)
     
     // nickname label initialize
     this.nickname_text = new PIXI.Text(this.nickname, { fontSize: 12 });
     this.nickname_text.anchor.set(0.5)
     this.nickname_text.position.y = -75
 
-    this.instance.addChild(this.nickname_text)
+    this.renderer.addChild(this.nickname_text)
     
     // hp bar initialize
     this.hp_bar = new PIXI.Graphics() 
-    this.instance.addChild(this.hp_bar)
+    this.renderer.addChild(this.hp_bar)
 
     // alias
-    this.position = this.instance.position
-    this.rotation = this.instance.rotation
+    this.position = this.renderer.position
+    this.rotation = this.renderer.rotation
 
     // function binding
     this.set_facing = this.set_facing.bind(this)
