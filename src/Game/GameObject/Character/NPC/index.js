@@ -1,13 +1,17 @@
 
 import Character from '../index'
+import Game from '../../../index'
 
 class NPC extends Character {
   constructor (initialize){
     super(initialize)
+    this.speed = initialize.speed
+    this.attack_damage = initialize.attack_damage
 
     this.sprite.interactive = true
-    this.update_status.bind(this)
+    this.sprite.on('mousedown', () => Game.instance.player.interact(this))
   }
+
   update_status(data){
     this.speed = data.speed || 0
     if(!data.moved){

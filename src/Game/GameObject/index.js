@@ -17,8 +17,7 @@ class GameObject {
     this.renderer.addChild(animation)
     animation.play()
   }
-  apply_filter(filter_name){
-
+  apply_filter(filter, duration){
   }
 }
 export default GameObject

@@ -23,12 +23,15 @@ class MiniMap {
     icon.y = object.renderer.y / 20
     icon.anchor.set(object.sprite.anchor.x, object.sprite.anchor.y)
 
-    this.renderer.addChildAt(icon, this.renderer.children.length -1)
+    this.renderer.addChild(icon)
 
   }
   update(player_position, player_team){
     this.player_icon.x = player_position.x / 20 + 6
     this.player_icon.y = player_position.y / 20 + 6
+    this.renderer.removeChild(this.player_icon)
+    this.renderer.addChild(this.player_icon)
+
   }
   set_minimap(){
   	let minimap = new PIXI.Sprite(PIXI.loader.resources['minimap'].texture)

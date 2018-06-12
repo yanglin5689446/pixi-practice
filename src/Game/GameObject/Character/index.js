@@ -16,6 +16,7 @@ class Character extends GameObject {
     this.nickname = initialize.nickname || 'anonymous'
     this.team = initialize.team || 1
     this.facing = 'down'
+    this.object_type = 'player'
 
     this.renderer.x = initialize.x || 0
     this.renderer.y = initialize.y || 0
@@ -38,10 +39,6 @@ class Character extends GameObject {
     // hp bar initialize
     this.hp_bar = new PIXI.Graphics() 
     this.renderer.addChild(this.hp_bar)
-
-    // alias
-    this.position = this.renderer.position
-    this.rotation = this.renderer.rotation
 
     // function binding
     this.set_facing = this.set_facing.bind(this)

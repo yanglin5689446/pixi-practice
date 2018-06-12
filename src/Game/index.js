@@ -37,7 +37,7 @@ class Game extends PIXI.Application {
   create_player(data){
     this.player = new Player(data)
     this.world.add_object(this.player)
-    this.world.viewport = this.player.position
+    this.world.viewport = this.player.renderer.position
   }
   create_panel(player){
     this.panel = new Panel(player)
@@ -47,22 +47,11 @@ class Game extends PIXI.Application {
   create_towers(data){
     const world = this.world
     const margin = 300
-    const towers = {
-      fox: data.fox.map(tower => new Tower('main_tower', tower.x, tower.y, tower.tier)),
-      panda: data.panda.map(tower => new Tower('main_tower', tower.x, tower.y, tower.tier))
-    }
+    const towers = data.map((tower, index) => new Tower(tower, index))
     this.objects.towers = towers
 
-    world.add_objects(towers.fox)
-    world.add_objects(towers.panda)
-    this.panel.mini_map.add(towers.fox[0])
-    this.panel.mini_map.add(towers.fox[1])
-    this.panel.mini_map.add(towers.fox[2])
-    this.panel.mini_map.add(towers.panda[0])
-    this.panel.mini_map.add(towers.panda[1])
-    this.panel.mini_map.add(towers.panda[2])
-
-
+    world.add_objects(towers)
+    towers.forEach(tower => this.panel.mini_map.add(tower))
   }
   update_players(online, offline){
     // foreach online players, 
@@ -80,6 +69,33 @@ class Game extends PIXI.Application {
     offline.forEach(key => {
       if(this.players[key])this.world.remove_object(this.players[key])
       delete this.players[key]
+    })
+  }
+  update_attacks(attacks){
+    attacks.forEach(attack => {
+      let attacker = null, target = null
+      switch(attack.attacker.type){
+        case 'player':
+          if(this.players[attack.attacker.id])
+            attacker = this.players[attack.attacker.id]
+          else if(this.player.id === attack.attacker.id)
+            attacker = this.player
+          break
+      }
+      switch(attack.target.type){
+        case 'tower':
+          if(this.objects.towers[attack.target.id])
+            target = this.objects.towers[attack.target.id]
+          break
+        case 'player':
+          if(this.players[attack.target.id])
+            target = this.players[attack.target.id]
+          else if(this.player.id === attack.target.id)
+            target = this.player
+          break;
+      }
+      if(attacker && target)
+        target.apply_animation(animations[attack.type])
     })
   }
 

@@ -3,25 +3,39 @@ import Character from '../index'
 import Game from '../../../index.js'
 
 import { key_pressed, keycode_map } from '../../../../keyboard'
+import socket from '../../../../socket'
+import { distance_between } from '../../../../utilities'
+
 
 class Player extends Character {
   constructor (initialize){
     super(initialize)
     this.speed = 5
     this.attack_range = 200
+    this.attack_damage = 5
 
     // function binding
     this._update_position = this._update_position.bind(this)
+    this.create_attack_range_ring = this.create_attack_range_ring.bind(this)
     this.update = this.update.bind(this)
     this.check_boundary = this.check_boundary.bind(this)
-
+    this.interact = this.interact.bind(this)
+    this.create_attack_range_ring()
+  }
+  create_attack_range_ring(){
+    this.attack_range_ring = new PIXI.Graphics()
+    this.attack_range_ring.alpha = 0.3
+    this.attack_range_ring.beginFill(0x90CAF9, 1);   
+    this.attack_range_ring.drawCircle(0, 0, this.attack_range)
+    this.attack_range_ring.endFill()
+    this.renderer.addChildAt(this.attack_range_ring, 0)
   }
   check_boundary(world){
-    if(this.position.x < 0) this.position.x = 0
-    if(this.position.y < 0) this.position.y = 0
-    if(this.position.x > world.width) this.position.x = world.width
+    if(this.renderer.position.x < 0) this.renderer.position.x = 0
+    if(this.renderer.position.y < 0) this.renderer.position.y = 0
+    if(this.renderer.position.x > world.width) this.renderer.position.x = world.width
     // assume player sprite height is around 100
-    if(this.position.y > world.height - 50) this.position.y = world.height - 50
+    if(this.renderer.position.y > world.height - 50) this.renderer.position.y = world.height - 50
   }
   _update_position(){
     this.does_moved = false
@@ -30,46 +44,46 @@ class Player extends Character {
 
     if(key_pressed[keycode_map['w']] && key_pressed[keycode_map['a']]){
       facing = 'left'
-      this.position.x -= this.speed / sqrt2
-      this.position.y -= this.speed / sqrt2
+      this.renderer.position.x -= this.speed / sqrt2
+      this.renderer.position.y -= this.speed / sqrt2
       this.does_moved = true
     }
     else if(key_pressed[keycode_map['w']] && key_pressed[keycode_map['d']]){
       facing = 'right'
-      this.position.x += this.speed / sqrt2
-      this.position.y -= this.speed / sqrt2
+      this.renderer.position.x += this.speed / sqrt2
+      this.renderer.position.y -= this.speed / sqrt2
       this.does_moved = true
     }
     else if(key_pressed[keycode_map['s']] && key_pressed[keycode_map['a']]){
       facing = 'left'
-      this.position.x -= this.speed / sqrt2
-      this.position.y += this.speed / sqrt2
+      this.renderer.position.x -= this.speed / sqrt2
+      this.renderer.position.y += this.speed / sqrt2
       this.does_moved = true
     }
     else if(key_pressed[keycode_map['s']] && key_pressed[keycode_map['d']]){
       facing = 'right'
-      this.position.x += this.speed / sqrt2
-      this.position.y += this.speed / sqrt2
+      this.renderer.position.x += this.speed / sqrt2
+      this.renderer.position.y += this.speed / sqrt2
       this.does_moved = true
     }
     else if(key_pressed[keycode_map['w']]){
       facing = 'up'
-      this.position.y -= this.speed
+      this.renderer.position.y -= this.speed
       this.does_moved = true
     }
     else if(key_pressed[keycode_map['s']]){
       facing = 'down'
-      this.position.y += this.speed
+      this.renderer.position.y += this.speed
       this.does_moved = true
     }
     else if(key_pressed[keycode_map['a']]){
       facing = 'left'
-      this.position.x -= this.speed
+      this.renderer.position.x -= this.speed
       this.does_moved = true
     }
     else if(key_pressed[keycode_map['d']]){
       facing = 'right'
-      this.position.x += this.speed
+      this.renderer.position.x += this.speed
       this.does_moved = true
     }
     this.set_facing(facing)
@@ -84,8 +98,35 @@ class Player extends Character {
   update(data){
     this.score = data.score
     this.hp = data.hp
-    this.render_hp_bar()
-    this._update_position()
+    if(this.hp > 0){
+      this.render_hp_bar()
+      this._update_position()
+    }
+    else {
+
+    }
+
+  }
+  interact(object){
+    if(this.team !== object.team){
+      console.log(distance_between(this, object))
+      if(distance_between(this, object) <= this.attack_range){
+        socket.emit('event', {
+          type: 'attack',
+          payload:{
+            type: 'normal_attack',
+            attacker: {
+              type: 'player',
+              id: this.id,
+            },
+            target: {
+              type: object.object_type,
+              id: object.id
+            },
+          }
+        })
+      }
+    }
   }
 }
 
