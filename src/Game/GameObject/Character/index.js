@@ -45,7 +45,9 @@ class Character extends GameObject {
     this.set_facing = this.set_facing.bind(this)
   }
 
-  render_hp_bar(){
+  render_hp_bar(hp){
+    this.hp = hp
+    
     const origin = { x: -40, y: -65}, w = 80, h = 10, ratio = (this.hp / this.max_hp)
     this.hp_bar.clear()
     this.hp_bar.beginFill(0xFF0000)

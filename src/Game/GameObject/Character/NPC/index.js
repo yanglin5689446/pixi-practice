@@ -20,15 +20,14 @@ class NPC extends Character {
   }
 
   update_status(data){
-    if(this.hp != data.hp)
-      this.render_hp_bar()
-    this.hp = data.hp
-
-    if(this.hp <= 0){
-      this.renderer.visible = false
-      return
+    if(data.hp > 0){
+      this.renderer.visible = true
+      this.render_hp_bar(data.hp)
     }
-    else this.renderer.visible = true
+    else {
+      this.renderer.visible = false
+      this.hp = 0
+    }
 
     this.speed = data.speed || 0
     if(!data.moved){
@@ -40,8 +39,6 @@ class NPC extends Character {
     this.renderer.x = data.x
     this.renderer.y = data.y
     this.set_facing(data.facing)
-
-    this.render_hp_bar()
   }
 }
 
