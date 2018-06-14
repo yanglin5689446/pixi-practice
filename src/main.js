@@ -15,11 +15,13 @@ let game = null
 
 function game_loop(delta){
   // update player position
-  const { panel, player, world, data_buffer } = game
+  const panel = game.panel
+  const player = game.player
+  const world = game.world
+  const data_buffer = game.data_buffer
 
   panel.update_score(player.score)
   panel.mini_map.update(player.renderer.position, player.team)
-
   player.update(data_buffer.players[player.id])
   world.viewport = player.renderer.position
 
@@ -89,6 +91,7 @@ function initialize_game(){
 window.onload = () => {
   document.getElementById('submit_button').addEventListener('click', initialize_game)
   preload_assets()
+
   window.addEventListener('resize', () => {
     // Resize the renderer
     canvas.width = window.innerWidth

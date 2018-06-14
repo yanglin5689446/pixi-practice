@@ -10,7 +10,7 @@ class Panel {
 
     this.scoreboard = new Scoreboard(canvas.width - 250, 50)
     this.renderer.addChild(this.scoreboard.renderer)
-    this.mini_map = new MiniMap(50, canvas.height - 200, player.team)
+    this.mini_map = new MiniMap(canvas.width - 550, canvas.height - 200, player.team)
     this.renderer.addChild(this.mini_map.renderer)
 
     //function binding

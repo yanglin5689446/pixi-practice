@@ -24,8 +24,9 @@ class Character extends GameObject {
     // player sprite initialize
     this.module = this.team == 1 ? animations.fox : animations.panda
     this.sprite = new PIXI.extras.AnimatedSprite(this.module.up)
+
+
     this.sprite.anchor.set(0.5)
-    this.sprite.scale.set(0.5)
 
     this.renderer.addChild(this.sprite)
     
@@ -46,7 +47,7 @@ class Character extends GameObject {
 
   render_hp_bar(){
     const origin = { x: -40, y: -65}, w = 80, h = 10, ratio = (this.hp / this.max_hp)
-
+    this.hp_bar.clear()
     this.hp_bar.beginFill(0xFF0000)
     this.hp_bar.lineStyle(0, 0, 0);
 
@@ -72,7 +73,7 @@ class Character extends GameObject {
     }
   }
   static base_animation_factor(){
-    return 0.02
+    return 0.015
   }
 }
 

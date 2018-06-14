@@ -10,8 +10,8 @@ import { distance_between } from '../../../../utilities'
 class Player extends Character {
   constructor (initialize){
     super(initialize)
-    this.speed = 5
-    this.attack_range = 200
+    this.speed = 20
+    this.attack_range = 300
     this.attack_damage = 5
 
     // function binding
@@ -28,7 +28,13 @@ class Player extends Character {
     this.attack_range_ring.beginFill(0x90CAF9, 1);   
     this.attack_range_ring.drawCircle(0, 0, this.attack_range)
     this.attack_range_ring.endFill()
-    this.renderer.addChildAt(this.attack_range_ring, 0)
+    this.attack_range_ring.interactive = true
+    this.attack_range_ring.x = this.renderer.x
+    this.attack_range_ring.y = this.renderer.y
+
+    this.attack_range_ring.zIndex = -1
+
+    Game.instance.world.renderer.addChildAt(this.attack_range_ring)
   }
   check_boundary(world){
     if(this.renderer.position.x < 0) this.renderer.position.x = 0
@@ -40,52 +46,28 @@ class Player extends Character {
   _update_position(){
     this.does_moved = false
     let facing
-    let sqrt2 = Math.sqrt(2)
+    
+    this.does_moved = true
 
-    if(key_pressed[keycode_map['w']] && key_pressed[keycode_map['a']]){
-      facing = 'left'
-      this.renderer.position.x -= this.speed / sqrt2
-      this.renderer.position.y -= this.speed / sqrt2
-      this.does_moved = true
-    }
-    else if(key_pressed[keycode_map['w']] && key_pressed[keycode_map['d']]){
-      facing = 'right'
-      this.renderer.position.x += this.speed / sqrt2
-      this.renderer.position.y -= this.speed / sqrt2
-      this.does_moved = true
-    }
-    else if(key_pressed[keycode_map['s']] && key_pressed[keycode_map['a']]){
-      facing = 'left'
-      this.renderer.position.x -= this.speed / sqrt2
-      this.renderer.position.y += this.speed / sqrt2
-      this.does_moved = true
-    }
-    else if(key_pressed[keycode_map['s']] && key_pressed[keycode_map['d']]){
-      facing = 'right'
-      this.renderer.position.x += this.speed / sqrt2
-      this.renderer.position.y += this.speed / sqrt2
-      this.does_moved = true
-    }
-    else if(key_pressed[keycode_map['w']]){
+
+    if(key_pressed[keycode_map['w']]){
       facing = 'up'
       this.renderer.position.y -= this.speed
-      this.does_moved = true
     }
     else if(key_pressed[keycode_map['s']]){
       facing = 'down'
       this.renderer.position.y += this.speed
-      this.does_moved = true
     }
     else if(key_pressed[keycode_map['a']]){
       facing = 'left'
       this.renderer.position.x -= this.speed
-      this.does_moved = true
     }
     else if(key_pressed[keycode_map['d']]){
       facing = 'right'
       this.renderer.position.x += this.speed
-      this.does_moved = true
     }
+    else this.does_moved = false
+
     this.set_facing(facing)
     if(!this.does_moved){
       this.sprite.animationSpeed = 0
@@ -97,19 +79,34 @@ class Player extends Character {
   }
   update(data){
     this.score = data.score
-    this.hp = data.hp
-    if(this.hp > 0){
-      this.render_hp_bar()
+    
+    if(data.hp > 0){
+      this.renderer.visible = true
+      this.attack_range_ring.visible = true
+      
+      this.renderer.x = data.x
+      this.renderer.y = data.y
+      
+      if(this.hp != data.hp)
+        this.render_hp_bar()
+      
+      this.hp = data.hp
+
       this._update_position()
     }
     else {
+      this.renderer.visible = false
+      this.attack_range_ring.visible = false
+      this.hp = 0
 
     }
-
+    this.attack_range_ring.x = this.renderer.x
+    this.attack_range_ring.y = this.renderer.y
   }
   interact(object){
+    if(this.hp <= 0) return 
+      
     if(this.team !== object.team){
-      console.log(distance_between(this, object))
       if(distance_between(this, object) <= this.attack_range){
         socket.emit('event', {
           type: 'attack',
@@ -122,7 +119,7 @@ class Player extends Character {
             target: {
               type: object.object_type,
               id: object.id
-            },
+            }
           }
         })
       }

@@ -6,9 +6,13 @@ class World {
   constructor(width, height){
     this.width = width || window.innerWidth
     this.height = height || window.innerHeight
+
     this.renderer = new PIXI.display.Stage()
+    this.renderer.interactive = true
     this.renderer.group.enableSort = true
-    this.renderer.group.on('sort', (object) => (object.zOrder = -object.y))
+    this.renderer.group.on('sort', (object) => { object.zOrder = -object.y })
+    this.scale = 1
+    this.renderer.scale.set(this.scale)
 
     // function bindingws
     this.add_object = this.add_object.bind(this)
@@ -19,7 +23,6 @@ class World {
 	
     // draw border
     this.draw_borders()
-	
     this.add_ground()
 
   }
@@ -52,12 +55,14 @@ class World {
 
   add_ground(){
 	  let ground = new PIXI.Sprite(PIXI.loader.resources["ground"].texture)
+    ground.scale.set(4)
+    ground.zIndex = -100
 	  this.renderer.addChild(ground)
   }
   
   set viewport(vw){
-    this.renderer.x = -vw.x + canvas.width/2
-    this.renderer.y = -vw.y + canvas.height/2
+    this.renderer.x = -vw.x * this.scale + canvas.width/2
+    this.renderer.y = -vw.y * this.scale + canvas.height/2
   }
 
 }

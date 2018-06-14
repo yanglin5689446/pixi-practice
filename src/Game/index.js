@@ -21,8 +21,10 @@ class Game extends PIXI.Application {
     this.renderer.view.style.position = 'absolute';
     this.renderer.view.style.display = 'block';
     this.renderer.autoResize = true;
-    this.renderer.resize(canvas.width, canvas.height);
+    this.renderer.resize(canvas.width, canvas.height)
+
     this.stage = new PIXI.display.Stage()
+
     this.stage.interactive = true
     this.objects = {}
     this.players = {}
@@ -51,7 +53,6 @@ class Game extends PIXI.Application {
     this.objects.towers = towers
 
     world.add_objects(towers)
-    towers.forEach(tower => this.panel.mini_map.add(tower))
   }
   update_players(online, offline){
     // foreach online players, 
@@ -92,10 +93,12 @@ class Game extends PIXI.Application {
             target = this.players[attack.target.id]
           else if(this.player.id === attack.target.id)
             target = this.player
-          break;
+          break
       }
-      if(attacker && target)
+      if(attacker && target){
         target.apply_animation(animations[attack.type])
+        target.apply_tint('sprite', 0xF44336, 200)
+      }
     })
   }
 

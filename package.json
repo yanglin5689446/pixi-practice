@@ -20,6 +20,6 @@
   "scripts": {
     "dev": "webpack-dev-server",
     "build": "webpack -p --progress --config=webpack.production.config.js",
-    "deploy": "scp build/app.js yanglin@140.113.67.102:/var/www/html/pixi/app.js"
+    "deploy": "scp build/main.js yanglin@140.113.67.102:/var/www/html/pixi/main.js"
   }
 }
