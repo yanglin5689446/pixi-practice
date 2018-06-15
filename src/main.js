@@ -20,12 +20,14 @@ function game_loop(delta){
   const world = game.world
   const data_buffer = game.data_buffer
 
-  panel.update_score(player.score)
   panel.mini_map.update(player.renderer.position, player.team)
+  panel.level.update(player)
+
   player.update(data_buffer.players[player.id])
   world.viewport = player.renderer.position
 
   game.update_players(data_buffer.players, data_buffer.disconnected)
+  game.update_items(data_buffer.items)
   data_buffer.objects.towers.forEach((tower, index) => game.objects.towers[index].update(tower))
 
   game.update_attacks(data_buffer.attacks)
@@ -98,7 +100,9 @@ window.onload = () => {
     canvas.height =  window.innerHeight 
     if(game){
       game.renderer.resize(window.innerWidth, window.innerHeight);
-      game.world.viewport = game.player.renderer.position      
+      game.world.viewport = game.player.renderer.position     
+      game.panel.resize()
+
     }
   })
 }

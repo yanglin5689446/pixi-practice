@@ -31,6 +31,7 @@ class Tower extends GameObject {
     this.sprite = new PIXI.Sprite(PIXI.loader.resources['main_tower'].texture)
     this.sprite.anchor.set(0.5, 0.8)
     this.sprite.interactive = true
+    this.sprite.hitArea = new PIXI.Rectangle(-50, -50, 100, 100)
     this.sprite.on('mouseover', () => {
       if(Game.instance.player.team === this.team)
         this.sprite.filters = [filters['green_outline']]
@@ -48,39 +49,24 @@ class Tower extends GameObject {
     // function binding
     this.render_hp_bar = this.render_hp_bar.bind(this)
     this.render_hp_bar(towers_config[this.tier - 1].hp_bar)
-    this.sprite.on('mousedown', (e) => {
-      Game.instance.player.interact(this)
-    })
+    this.sprite.on('mousedown', (e) => Game.instance.player.interact_object(this))
 
   }
   update(data){
-    if(this.hp != data.hp)
-      this.render_hp_bar(towers_config[this.tier - 1].hp_bar)
+    if(this.dead)return 
+    this.render_hp_bar(towers_config[this.tier - 1].hp_bar)
     this.hp = data.hp
-    if(data.last_attack){
-      data.last_attack = null
-      this.apply_animation(animations.normal_attack)
-    }
+    this.dead = data.dead
+    this.renderer.visible = !this.dead
   }
   render_hp_bar(setting){
     const ratio = (this.hp / this.max_hp)
 
     this.hp_bar.clear()
     this.hp_bar.beginFill(0xFF0000)
-    this.hp_bar.lineStyle(0, 0, 0);
-
-    this.hp_bar.moveTo(setting.x, setting.y)
-    this.hp_bar.lineTo(setting.x + setting.w, setting.y)
-    this.hp_bar.lineTo(setting.x + setting.w, setting.y + setting.h)
-    this.hp_bar.lineTo(setting.x, setting.y + setting.h)
-    this.hp_bar.lineTo(setting.x, setting.y)
-
+    this.hp_bar.drawRect(setting.x, setting.y, setting.w, setting.h)
     this.hp_bar.beginFill(0x8BC34A)
-    this.hp_bar.moveTo(setting.x, setting.y)
-    this.hp_bar.lineTo(setting.x + setting.w * ratio, setting.y)
-    this.hp_bar.lineTo(setting.x + setting.w * ratio, setting.y + setting.h)
-    this.hp_bar.lineTo(setting.x, setting.y + setting.h)
-    this.hp_bar.lineTo(setting.x, setting.y)
+    this.hp_bar.drawRect(setting.x, setting.y, setting.w  * ratio, setting.h)
   }
 }
 

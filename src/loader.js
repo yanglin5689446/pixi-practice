@@ -14,10 +14,10 @@ const preload_assets = () => {
     .add('panda',  'assets/images/panda.png')
     .add('panda_icon',  'assets/images/panda_icon.png')
     .add('main_tower',  'assets/images/main_tower.png')
-    .add('sub_tower',  'assets/images/sub_tower.png')
     .add('normal_attack',  'assets/images/attack.png')
     .add('ground',  'assets/images/ground.jpg')
     .add('minimap',  'assets/images/minimap.jpg')
+    .add('coin',  'assets/images/coin.png')
 
     .load(() => {
       setup_animations()

@@ -9,8 +9,6 @@ class Character extends GameObject {
     super()
 
     this.id = initialize.id || 0
-    this.score = 0
-    this.body_radius = 80
     this.hp = initialize.hp
     this.max_hp = initialize.max_hp
     this.nickname = initialize.nickname || 'anonymous'
@@ -23,7 +21,7 @@ class Character extends GameObject {
     
     // player sprite initialize
     this.module = this.team == 1 ? animations.fox : animations.panda
-    this.sprite = new PIXI.extras.AnimatedSprite(this.module.up)
+    this.sprite = new PIXI.extras.AnimatedSprite(this.module.down)
 
 
     this.sprite.anchor.set(0.5)
@@ -47,24 +45,13 @@ class Character extends GameObject {
 
   render_hp_bar(hp){
     this.hp = hp
-    
     const origin = { x: -40, y: -65}, w = 80, h = 10, ratio = (this.hp / this.max_hp)
+
     this.hp_bar.clear()
     this.hp_bar.beginFill(0xFF0000)
-    this.hp_bar.lineStyle(0, 0, 0);
-
-    this.hp_bar.moveTo(origin.x, origin.y);
-    this.hp_bar.lineTo(origin.x + w, origin.y);
-    this.hp_bar.lineTo(origin.x + w, origin.y + h);
-    this.hp_bar.lineTo(origin.x, origin.y + h);
-    this.hp_bar.lineTo(origin.x, origin.y);
-
+    this.hp_bar.drawRect(origin.x, origin.y, w, h)
     this.hp_bar.beginFill(0x8BC34A)
-    this.hp_bar.moveTo(origin.x, origin.y);
-    this.hp_bar.lineTo(origin.x + w * ratio, origin.y);
-    this.hp_bar.lineTo(origin.x + w * ratio, origin.y + h);
-    this.hp_bar.lineTo(origin.x, origin.y + h);
-    this.hp_bar.lineTo(origin.x, origin.y);
+    this.hp_bar.drawRect(origin.x, origin.y, w  * ratio, h)
   }
   set_facing(facing){
     if(this.facing === facing)return;

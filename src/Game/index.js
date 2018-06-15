@@ -7,6 +7,8 @@ import Panel from './Panel'
 import Player from './GameObject/Character/Player'
 import Tower from './GameObject/Tower'
 import NPC from './GameObject/Character/NPC'
+import Coin from './GameObject/Coin'
+
 
 
 import { animations } from '../Effects/animations'
@@ -27,6 +29,7 @@ class Game extends PIXI.Application {
 
     this.stage.interactive = true
     this.objects = {}
+    this.items = {}
     this.players = {}
 
     instance = this
@@ -43,7 +46,6 @@ class Game extends PIXI.Application {
   }
   create_panel(player){
     this.panel = new Panel(player)
-    this.panel.update_score(player.score)
     this.stage.addChild(this.panel.renderer)
   }
   create_towers(data){
@@ -70,6 +72,22 @@ class Game extends PIXI.Application {
     offline.forEach(key => {
       if(this.players[key])this.world.remove_object(this.players[key])
       delete this.players[key]
+    })
+  }
+  update_items(items){
+    if(!this.items.coins)this.items.coins = {}
+
+    Object.keys(items.coins.data).forEach(key => {
+      if(!this.items.coins[key]){
+        this.items.coins[key] = new Coin(items.coins.data[key], key)
+        this.world.add_object(this.items.coins[key])
+      }
+    })
+    items.coins.removed.forEach(key => {
+      if(this.items.coins[key]){
+        this.world.remove_object(this.items.coins[key])
+        delete this.items.coins[key]
+      }
     })
   }
   update_attacks(attacks){

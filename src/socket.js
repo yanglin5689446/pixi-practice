@@ -7,4 +7,6 @@ const socket = io(SERVER, {
   autoConnect: false 
 });
 
+socket.on('connect_error', () => window.location.reload())
+
 export default socket

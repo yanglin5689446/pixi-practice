@@ -2,7 +2,6 @@
 
 import { canvas } from '../../constants'
 
-
 class MiniMap {
   constructor(x, y, team){
     this.renderer = new PIXI.Container()
@@ -24,7 +23,6 @@ class MiniMap {
     icon.anchor.set(object.sprite.anchor.x, object.sprite.anchor.y)
 
     this.renderer.addChild(icon)
-
   }
   update(player_position, player_team){
     this.player_icon.x = player_position.x / 20 + 6

@@ -1,6 +1,7 @@
 
 import Character from '../index'
 import Game from '../../../index'
+import { filters } from '../../../../Effects/filters'
 
 class NPC extends Character {
   constructor (initialize){
@@ -9,14 +10,7 @@ class NPC extends Character {
     this.attack_damage = initialize.attack_damage    
 
     this.sprite.interactive = true
-    this.sprite.on('mousedown', () => Game.instance.player.interact(this))
-    this.sprite.on('mouseover', () => {
-      if(Game.instance.player.team === this.team)
-        this.sprite.filters = [filters['green_outline']]
-      else 
-        this.sprite.filters = [filters['red_outline']]
-    })
-    this.sprite.on('mouseout', () => this.sprite.filters = [])
+    this.sprite.on('mousedown', () => Game.instance.player.interact_object(this))
   }
 
   update_status(data){
