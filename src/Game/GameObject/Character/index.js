@@ -9,23 +9,20 @@ class Character extends GameObject {
     super()
 
     this.id = initialize.id || 0
-    this.hp = initialize.hp
-    this.max_hp = initialize.max_hp
+    
+    this.stats = initialize.stats
+
     this.nickname = initialize.nickname || 'anonymous'
     this.team = initialize.team || 1
-    this.facing = 'down'
     this.object_type = 'player'
 
-    this.renderer.x = initialize.x || 0
-    this.renderer.y = initialize.y || 0
+    this.renderer.x = initialize.stats.x || 0
+    this.renderer.y = initialize.stats.y || 0
     
     // player sprite initialize
     this.module = this.team == 1 ? animations.fox : animations.panda
     this.sprite = new PIXI.extras.AnimatedSprite(this.module.down)
-
-
     this.sprite.anchor.set(0.5)
-
     this.renderer.addChild(this.sprite)
     
     // nickname label initialize
@@ -44,8 +41,8 @@ class Character extends GameObject {
   }
 
   render_hp_bar(hp){
-    this.hp = hp
-    const origin = { x: -40, y: -65}, w = 80, h = 10, ratio = (this.hp / this.max_hp)
+    this.stats.hp = hp
+    const origin = { x: -40, y: -65}, w = 80, h = 10, ratio = (this.stats.hp / this.stats.max_hp)
 
     this.hp_bar.clear()
     this.hp_bar.beginFill(0xFF0000)
@@ -54,8 +51,8 @@ class Character extends GameObject {
     this.hp_bar.drawRect(origin.x, origin.y, w  * ratio, h)
   }
   set_facing(facing){
-    if(this.facing === facing)return;
-    this.facing = facing
+    if(this.stats.facing === facing)return;
+    this.stats.facing = facing
     if(this.module[facing]){
       this.sprite.textures = this.module[facing]
       this.sprite.play()

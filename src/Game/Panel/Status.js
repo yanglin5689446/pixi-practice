@@ -1,7 +1,6 @@
 
 
 import { canvas } from '../../constants'
-import { filters } from '../../Effects/filters'
 
 
 class Status {
@@ -9,9 +8,7 @@ class Status {
     this.renderer = new PIXI.Container()
     this.renderer.x = 50
     this.renderer.y = 50
-    this.renderer.filters = [filters['grey_outline']]
     this.team = team
-
 
     this.exp_bar = new PIXI.Graphics()
     this.renderer.addChild(this.exp_bar)
@@ -28,17 +25,20 @@ class Status {
     this.render_exp_bar(0, 100)
   }
   render_exp_bar(exp, next_level_exp){
-    const origin = { x: 20, y: 0}, w = 200, h = 20, ratio = exp / next_level_exp
+    const origin = { x: 0, y: 0}, w = 200, h = 20, ratio = exp / next_level_exp
 
     this.exp_bar.clear()
+    this.exp_bar.lineStyle(3, 0xCCCCCC)
+
     this.exp_bar.beginFill(0x333333)
     this.exp_bar.drawRect(origin.x, origin.y, w, h)
+    this.exp_bar.lineStyle(0, 0)
     this.exp_bar.beginFill(0x8BC34A)
     this.exp_bar.drawRect(origin.x, origin.y, w  * ratio, h)
   }
-  update(player){
-    this.level = player.level
-    this.render_exp_bar(player.exp, player.next_level_exp)
+  update(stats){
+    this.level = stats.level
+    this.render_exp_bar(stats.exp, stats.next_level_exp)
 
   }
   

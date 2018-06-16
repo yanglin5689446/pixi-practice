@@ -29,7 +29,6 @@ class Game extends PIXI.Application {
 
     this.stage.interactive = true
     this.objects = {}
-    this.items = {}
     this.players = {}
 
     instance = this
@@ -74,33 +73,25 @@ class Game extends PIXI.Application {
       delete this.players[key]
     })
   }
-  update_items(items){
-    if(!this.items.coins)this.items.coins = {}
+  update_objects(objects){
+    if(!this.objects.coins)this.objects.coins = {}
 
-    Object.keys(items.coins.data).forEach(key => {
-      if(!this.items.coins[key]){
-        this.items.coins[key] = new Coin(items.coins.data[key], key)
-        this.world.add_object(this.items.coins[key])
+    Object.keys(objects.coins.data).forEach(key => {
+      if(!this.objects.coins[key]){
+        this.objects.coins[key] = new Coin(objects.coins.data[key], key)
+        this.world.add_object(this.objects.coins[key])
       }
     })
-    items.coins.removed.forEach(key => {
-      if(this.items.coins[key]){
-        this.world.remove_object(this.items.coins[key])
-        delete this.items.coins[key]
+    objects.coins.removed.forEach(key => {
+      if(this.objects.coins[key]){
+        this.world.remove_object(this.objects.coins[key])
+        delete this.objects.coins[key]
       }
     })
   }
   update_attacks(attacks){
     attacks.forEach(attack => {
-      let attacker = null, target = null
-      switch(attack.attacker.type){
-        case 'player':
-          if(this.players[attack.attacker.id])
-            attacker = this.players[attack.attacker.id]
-          else if(this.player.id === attack.attacker.id)
-            attacker = this.player
-          break
-      }
+      let target = null
       switch(attack.target.type){
         case 'tower':
           if(this.objects.towers[attack.target.id])
@@ -113,7 +104,7 @@ class Game extends PIXI.Application {
             target = this.player
           break
       }
-      if(attacker && target){
+      if(target){
         target.apply_animation(animations[attack.type])
         target.apply_tint('sprite', 0xF44336, 200)
       }

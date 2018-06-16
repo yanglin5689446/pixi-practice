@@ -21,25 +21,22 @@ function game_loop(delta){
   const data_buffer = game.data_buffer
 
   panel.mini_map.update(player.renderer.position, player.team)
-  panel.level.update(player)
+  panel.status.update(player.stats)
 
   player.update(data_buffer.players[player.id])
   world.viewport = player.renderer.position
 
   game.update_players(data_buffer.players, data_buffer.disconnected)
-  game.update_items(data_buffer.items)
+  game.update_objects(data_buffer.objects)
   data_buffer.objects.towers.forEach((tower, index) => game.objects.towers[index].update(tower))
 
   game.update_attacks(data_buffer.attacks)
 
   socket.emit('event', { 
-    type: 'player_movement', 
+    type: 'update', 
     payload: { 
       id: player.id,
-      x: player.renderer.position.x, 
-      y: player.renderer.position.y, 
-      facing: player.facing,
-      speed: player.speed,
+      facing: player.stats.facing,
       moved: player.does_moved
     } 
   })

@@ -4,28 +4,22 @@ import Game from '../../../index.js'
 
 import { key_pressed, keycode_map } from '../../../../keyboard'
 import socket from '../../../../socket'
-import { distance_between } from '../../../../utilities'
 
 
 class Player extends Character {
   constructor (initialize){
     super(initialize)
-    this.speed = initialize.speed
-    this.attack_damage = initialize.attack_damage
-    this.reachable_range = initialize.reachable_range
-    this.gold = initialize.gold
-    this.level = initialize.level
-    this.exp = initialize.exp
-    this.next_level_exp = initialize.next_level_exp
-    this.attack_available_timestamp = initialize.attack_available_timestamp
+
+    this.cd_bar = new PIXI.Graphics()
+    this.renderer.addChild(this.cd_bar)
 
     // function binding
     this._update_position = this._update_position.bind(this)
+    this._update_cd = this._update_cd.bind(this)
     this.create_reachable_circle = this.create_reachable_circle.bind(this)
     this.update = this.update.bind(this)
     this.is_cooldown = this.is_cooldown.bind(this)
-    this.interact_item = this.interact_item.bind(this)
-    this.interact_object = this.interact_object.bind(this)
+    this.interact = this.interact.bind(this)
 
     this.create_reachable_circle()
   }
@@ -33,7 +27,7 @@ class Player extends Character {
     this.reachable_circle = new PIXI.Graphics()
     this.reachable_circle.alpha = 0.3
     this.reachable_circle.beginFill(0x90CAF9, 1);   
-    this.reachable_circle.drawCircle(0, 0, this.reachable_range)
+    this.reachable_circle.drawCircle(0, 0, this.stats.reachable_range)
     this.reachable_circle.endFill()
     this.reachable_circle.interactive = true
     this.reachable_circle.x = this.renderer.x
@@ -44,31 +38,29 @@ class Player extends Character {
     Game.instance.world.renderer.addChildAt(this.reachable_circle)
   }
   is_cooldown(){
-    return Date.now() <= this.attack_available_timestamp
+    return Date.now() <= this.stats.attack_available_timestamp
+  }
+  _update_cd(){
+    const current_time = Date.now()
+    const ratio = this.stats.attack_available_timestamp > current_time 
+                ? (this.stats.attack_available_timestamp - current_time) / this.stats.cd
+                : 0
+    this.cd_bar.clear()
+    this.cd_bar.beginFill(0x90CAF9);  
+    this.cd_bar.drawRect(-50, 80, 100 * ratio , 10)
   }
   _update_position(){
-    this.does_moved = false
-    let facing
-    
     this.does_moved = true
+    let facing
 
-
-    if(key_pressed[keycode_map['w']]){
+    if(key_pressed[keycode_map['w']])
       facing = 'up'
-      this.renderer.position.y -= this.speed
-    }
-    else if(key_pressed[keycode_map['s']]){
+    else if(key_pressed[keycode_map['s']])
       facing = 'down'
-      this.renderer.position.y += this.speed
-    }
-    else if(key_pressed[keycode_map['a']]){
+    else if(key_pressed[keycode_map['a']])
       facing = 'left'
-      this.renderer.position.x -= this.speed
-    }
-    else if(key_pressed[keycode_map['d']]){
+    else if(key_pressed[keycode_map['d']])
       facing = 'right'
-      this.renderer.position.x += this.speed
-    }
     else this.does_moved = false
 
     this.set_facing(facing)
@@ -77,26 +69,19 @@ class Player extends Character {
       this.sprite.gotoAndPlay(0)
     }
     else 
-      this.sprite.animationSpeed = Character.base_animation_factor() * this.speed
+      this.sprite.animationSpeed = Character.base_animation_factor() * this.stats.speed
   }
   update(data){
-    this.speed = data.speed
-    this.attack_damage = data.attack_damage
-    this.reachable_range = data.reachable_range
-    this.gold = data.gold
-    this.level = data.level
-    this.exp = data.exp
-    this.next_level_exp = data.next_level_exp
-    this.attack_available_timestamp = data.attack_available_timestamp
+    this.stats = data.stats
 
-    this.render_hp_bar(data.hp)
-
-    if(this.hp > 0){
+    this._update_cd()
+    this.render_hp_bar(data.stats.hp)
+    if(this.stats.hp > 0){
       this.renderer.visible = true
       this.reachable_circle.visible = true
       
-      this.renderer.x = data.x
-      this.renderer.y = data.y
+      this.renderer.x = this.stats.x
+      this.renderer.y = this.stats.y
 
       this._update_position()
     }
@@ -107,42 +92,21 @@ class Player extends Character {
     this.reachable_circle.x = this.renderer.x
     this.reachable_circle.y = this.renderer.y
   }
-  interact_item(item){
-    if(this.hp <= 0) return 
-    if(distance_between(this, item) <= this.reachable_range){
-      socket.emit('event', {
-        type: 'pick_coin',
-        payload:{
-          id: this.id,
-          coin_id: item.id
+
+  interact(target){
+    if(this.stats.hp <= 0) return 
+
+    socket.emit('event', {
+      type: 'click',
+      payload:{
+        player: this.id,
+        target: {
+          type: target.object_type,
+          id: target.id
         }
-      })
-    }
-
-  }
-
-  interact_object(object){
-    if(this.hp <= 0) return 
-    if(this.is_cooldown())return
-
-    if(this.team !== object.team){
-      if(distance_between(this, object) <= this.reachable_range){
-        socket.emit('event', {
-          type: 'attack',
-          payload:{
-            type: 'normal_attack',
-            attacker: {
-              type: 'player',
-              id: this.id,
-            },
-            target: {
-              type: object.object_type,
-              id: object.id
-            }
-          }
-        })
       }
-    }
+    })
+
   }
 }
 

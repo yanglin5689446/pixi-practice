@@ -19,10 +19,9 @@ const towers_config = [
 class Tower extends GameObject {
   constructor (initialize, id){
     super()
-    this.renderer.position.x = initialize.x   
-    this.renderer.position.y = initialize.y
-    this.max_hp = initialize.max_hp
-    this.hp = initialize.hp
+    this.stats = initialize.stats
+    this.renderer.position.x = initialize.stats.x   
+    this.renderer.position.y = initialize.stats.y
     this.id = id
     this.team = initialize.team
     this.tier = initialize.tier
@@ -49,18 +48,20 @@ class Tower extends GameObject {
     // function binding
     this.render_hp_bar = this.render_hp_bar.bind(this)
     this.render_hp_bar(towers_config[this.tier - 1].hp_bar)
-    this.sprite.on('mousedown', (e) => Game.instance.player.interact_object(this))
+    this.sprite.on('mousedown', (e) => Game.instance.player.interact(this))
 
   }
   update(data){
-    if(this.dead)return 
+    if(this.stats.dead){
+      this.renderer.visible = false
+      return
+    }
     this.render_hp_bar(towers_config[this.tier - 1].hp_bar)
-    this.hp = data.hp
-    this.dead = data.dead
-    this.renderer.visible = !this.dead
+    this.stats.hp = data.stats.hp
+    this.stats.dead = data.stats.dead
   }
   render_hp_bar(setting){
-    const ratio = (this.hp / this.max_hp)
+    const ratio = (this.stats.hp / this.stats.max_hp)
 
     this.hp_bar.clear()
     this.hp_bar.beginFill(0xFF0000)

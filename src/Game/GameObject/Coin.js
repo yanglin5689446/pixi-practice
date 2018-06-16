@@ -8,7 +8,7 @@ import Game from '../index'
 class Coin extends GameObject {
   constructor (initialize, id){
     super()
-    this.item_type = 'coin'
+    this.object_type = 'coin'
 
     this.renderer.position.x = initialize.x   
     this.renderer.position.y = initialize.y
@@ -19,7 +19,7 @@ class Coin extends GameObject {
     this.sprite.anchor.set(0.5)
     this.sprite.animationSpeed = 0.2
     this.sprite.interactive = true
-    this.sprite.on('mousedown', () => Game.instance.player.interact_item(this))
+    this.sprite.on('mousedown', () => Game.instance.player.interact(this))
 
     this.sprite.play()
 
