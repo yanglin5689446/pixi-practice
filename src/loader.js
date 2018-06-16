@@ -15,6 +15,8 @@ const preload_assets = () => {
     .add('panda',  'assets/images/panda.png')
     .add('panda_icon',  'assets/images/panda_icon.png')
 	  .add('panda_big_icon',  'assets/images/panda_big_icon.png')
+    .add('panda_minion',  'assets/images/panda_minion.png')
+
     .add('fox_tower1',  'assets/images/fox_tower1.png')
     .add('fox_tower2',  'assets/images/fox_tower2.png')
 	  .add('panda_tower1',  'assets/images/panda_tower1.png')

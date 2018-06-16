@@ -20,10 +20,11 @@ class Character extends GameObject {
     this.renderer.y = initialize.stats.y || 0
     
     // player sprite initialize
-    this.module = this.team == 1 ? animations.fox : animations.panda
-    this.sprite = new PIXI.extras.AnimatedSprite(this.module.down)
+    this.module = (this.team === 1 ? animations.fox : animations.panda)
+    this.sprite = new PIXI.extras.AnimatedSprite(this.module[this.stats.facing || 'down'])
     this.sprite.anchor.set(0.5)
     this.renderer.addChild(this.sprite)
+    if(this.stats.facing)this.sprite.play()
     
     // nickname label initialize
     this.nickname_text = new PIXI.Text(this.nickname, { fontSize: 12 });

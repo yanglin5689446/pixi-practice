@@ -61,7 +61,7 @@ class Game extends PIXI.Application {
     Object.keys(online).forEach(key => {
       if(key === this.player.id)return
       if(!this.players[key]){
-        this.players[key] = new NPC(online[key])
+        this.players[key] = new NPC(online[key], 'player')
         this.world.add_object(this.players[key])
       }
       else this.players[key].update_status(online[key])
@@ -74,8 +74,9 @@ class Game extends PIXI.Application {
     })
   }
   update_objects(objects){
-    if(!this.objects.coins)this.objects.coins = {}
 
+    // coins
+    if(!this.objects.coins)this.objects.coins = {}
     Object.keys(objects.coins.data).forEach(key => {
       if(!this.objects.coins[key]){
         this.objects.coins[key] = new Coin(objects.coins.data[key], key)
@@ -89,6 +90,24 @@ class Game extends PIXI.Application {
       }
     })
 
+    // mobs
+    if(!this.objects.mobs)this.objects.mobs = {}
+    const living = objects.mobs.data, dead = objects.mobs.removed
+    Object.keys(living).forEach(key => {
+      if(!this.objects.mobs[key]){
+        this.objects.mobs[key] = new NPC(living[key], 'mob')
+        this.world.add_object(this.objects.mobs[key])
+      }
+      else this.objects.mobs[key].update_status(living[key])
+    })
+
+    // remove disconnected user
+    dead.forEach(key => {
+      if(this.objects.mobs[key])this.world.remove_object(this.objects.mobs[key])
+      delete this.objects.mobs[key]
+    })
+
+    // towers
     objects.towers.forEach((tower, index) => this.objects.towers[index].update(tower))
 
   }
@@ -106,10 +125,17 @@ class Game extends PIXI.Application {
           else if(this.player.id === attack.target.id)
             target = this.player
           break
+        case 'mob':
+          if(this.objects.mobs[attack.target.id])
+            target = this.objects.mobs[attack.target.id]
+          break
       }
       if(target){
         target.apply_animation(animations[attack.type])
         target.apply_tint('sprite', 0xF44336, 200)
+        if(target.object_type === 'tower')
+          target.apply_tint('icon', 0xF44336, 200)
+
       }
     })
   }

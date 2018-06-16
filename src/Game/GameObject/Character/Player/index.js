@@ -20,6 +20,7 @@ class Player extends Character {
     this.create_reachable_circle = this.create_reachable_circle.bind(this)
     this.update = this.update.bind(this)
     this.is_cooldown = this.is_cooldown.bind(this)
+
     this.interact = this.interact.bind(this)
 
     this.create_reachable_circle()
@@ -59,14 +60,10 @@ class Player extends Character {
     this.does_moved = true
     let facing
 
-    if(key_pressed[keycode_map['w']])
-      facing = 'up'
-    else if(key_pressed[keycode_map['s']])
-      facing = 'down'
-    else if(key_pressed[keycode_map['a']])
-      facing = 'left'
-    else if(key_pressed[keycode_map['d']])
-      facing = 'right'
+    if(key_pressed[keycode_map['w']])facing = 'up'
+    else if(key_pressed[keycode_map['s']])facing = 'down'
+    else if(key_pressed[keycode_map['a']])facing = 'left'
+    else if(key_pressed[keycode_map['d']])facing = 'right'
     else this.does_moved = false
 
     this.set_facing(facing)
@@ -74,8 +71,9 @@ class Player extends Character {
       this.sprite.animationSpeed = 0
       this.sprite.gotoAndPlay(0)
     }
-    else 
+    else {
       this.sprite.animationSpeed = Character.base_animation_factor() * this.stats.speed
+    }
   }
   update(data){
     this.stats = data.stats
