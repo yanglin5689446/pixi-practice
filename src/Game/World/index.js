@@ -54,8 +54,8 @@ class World {
   }
 
   add_ground(){
-	  let ground = new PIXI.Sprite(PIXI.loader.resources["ground"].texture)
-    ground.scale.set(4)
+	let ground = new PIXI.Sprite(PIXI.loader.resources["ground"].texture)
+    ground.scale.set(2)
     ground.zIndex = -100
 	  this.renderer.addChild(ground)
   }

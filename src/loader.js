@@ -32,6 +32,9 @@ const preload_assets = () => {
   	.add('reachable_range', 'assets/images/reachable_range.png')
   	.add('speed', 'assets/images/speed.png')
     .add('upgrade', 'assets/images/upgrade.png')
+  	.add('gold_cup', 'assets/images/gold_cup.png')
+  	.add('silver_cup', 'assets/images/silver_cup.png')
+  	.add('bronze_cup', 'assets/images/bronze_cup.png')
 
     .load(() => {
       setup_animations()

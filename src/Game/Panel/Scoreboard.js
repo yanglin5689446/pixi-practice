@@ -8,29 +8,33 @@ class Scoreboard {
     this.renderer.y = y
     
     // renderer background
-    let graphics = new PIXI.Graphics()
-    graphics.beginFill(0xFFFFFF, 0.7)
-    graphics.lineStyle(0)
-    graphics.drawRoundedRect(0, 0, 200, 360, 10)
-    this.renderer.addChild(graphics)
-    
+	let graphics = []
+	for(let i = 0;i < 3;i++){
+		graphics[i] = new PIXI.Graphics()
+		graphics[i].beginFill(0xFFFFFF, 0.8)
+		graphics[i].lineStyle(0)
+		graphics[i].drawRoundedRect(0, i*50, 180, 40, 10)
+		this.renderer.addChild(graphics[i])
+	}
+	
     // renderer field
-    let player_name = new PIXI.Text('Name', { fontSize: 16 })
-    player_name.anchor.set(0.5)
-    player_name.x = 200/4
-    player_name.y = 30
-    this.renderer.addChild(player_name)
-
-    let player_score = new PIXI.Text('Score', { fontSize: 16 })
-    player_score.anchor.set(0.5)
-    player_score.x = 200/4*3
-    player_score.y = 30
-    this.renderer.addChild(player_score)
-
+	this.set_cup_icons()
+	
     this.update.bind(this)
   }
   update(){
 
+  }
+  set_cup_icons(){
+	  const cups = [ 'gold_cup', 'silver_cup', 'bronze_cup' ]
+	  this.cups = cups.map((name, index) => {
+		  let cup = new PIXI.Sprite(PIXI.loader.resources[name].texture)
+		  cup.x = 8
+		  cup.y = 5 + index * 50
+		  this.renderer.addChild(cup)
+		  return cup
+	  })
+		  
   }
 }
 
