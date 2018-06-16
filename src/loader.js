@@ -18,6 +18,7 @@ const preload_assets = () => {
     .add('ground',  'assets/images/ground.jpg')
     .add('minimap',  'assets/images/minimap.jpg')
     .add('coin',  'assets/images/coin.png')
+    .add('coin_icon',  'assets/images/coin_icon.png')
 
     .load(() => {
       setup_animations()
