@@ -41,29 +41,15 @@ class Status {
     this.render_exp_bar(player.exp, player.next_level_exp)
   }
   set_stat_icons(){
-	this.attack_damage_icon = new PIXI.Sprite(PIXI.loader.resources['attack_damage'].texture)
-	this.speed_icon = new PIXI.Sprite(PIXI.loader.resources['speed'].texture)
-	this.max_hp_icon = new PIXI.Sprite(PIXI.loader.resources['max_hp'].texture)
-	this.attack_speed_icon = new PIXI.Sprite(PIXI.loader.resources['attack_speed'].texture)
-	this.reachable_range_icon = new PIXI.Sprite(PIXI.loader.resources['reachable_range'].texture)
-	this.attack_damage_icon.x = -20
-	this.attack_damage_icon.y = 30
-	this.speed_icon.x = -20
-	this.speed_icon.y = 60
-	this.max_hp_icon.x = -20
-	this.max_hp_icon.y = 90
-	this.attack_speed_icon.x =-20
-	this.attack_speed_icon.y =120
-	this.reachable_range_icon.x = -20
-	this.reachable_range_icon.y = 150
-	
-	this.renderer.addChild(this.attack_damage_icon)
-	this.renderer.addChild(this.speed_icon)
-	this.renderer.addChild(this.max_hp_icon)
-	this.renderer.addChild(this.attack_speed_icon)
-	this.renderer.addChild(this.reachable_range_icon)
-	
-	
+	const icons = [ 'attack_damage', 'speed', 'max_hp', 'attack_speed', 'reachable_range' ]
+
+    this.icons = icons.map((name, index) => {
+      let icon = new PIXI.Sprite(PIXI.loader.resources[name].texture)
+      icon.x = -20 
+      icon.y = 40 * (index + 1)
+      this.renderer.addChild(icon)
+      return icon
+    })
   }
   
   
