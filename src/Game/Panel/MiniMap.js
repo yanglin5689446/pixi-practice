@@ -13,16 +13,6 @@ class MiniMap {
     this.set_player_icon()
 
     this.update = this.update.bind(this)
-    this.add = this.add.bind(this)
-  }
-  add(object){
-    let icon = new PIXI.Sprite(object.sprite.texture)
-    icon.scale.set(object.sprite.scale.x / 8, object.sprite.scale.y / 8)
-    icon.x = object.renderer.x / 20
-    icon.y = object.renderer.y / 20
-    icon.anchor.set(object.sprite.anchor.x, object.sprite.anchor.y)
-
-    this.renderer.addChild(icon)
   }
   update(player_position, player_team){
     this.player_icon.x = player_position.x / 20 + 6

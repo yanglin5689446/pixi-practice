@@ -17,29 +17,15 @@ function game_loop(delta){
   // update player position
   const panel = game.panel
   const player = game.player
-  const world = game.world
   const data_buffer = game.data_buffer
 
-  panel.mini_map.update(player.renderer.position, player.team)
-  panel.status.update(player.stats)
-
-  player.update(data_buffer.players[player.id])
-  world.viewport = player.renderer.position
+  panel.update(player)
 
   game.update_players(data_buffer.players, data_buffer.disconnected)
   game.update_objects(data_buffer.objects)
-  data_buffer.objects.towers.forEach((tower, index) => game.objects.towers[index].update(tower))
-
   game.update_attacks(data_buffer.attacks)
 
-  socket.emit('event', { 
-    type: 'update', 
-    payload: { 
-      id: player.id,
-      facing: player.stats.facing,
-      moved: player.does_moved
-    } 
-  })
+  player.update(data_buffer.players[player.id])
 }
 
 function initialize_game(){

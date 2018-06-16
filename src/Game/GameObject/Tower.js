@@ -27,9 +27,9 @@ class Tower extends GameObject {
     this.tier = initialize.tier
     this.object_type = 'tower'
 	
-	this.sprite = this.team === 1 ?
-		new PIXI.Sprite(PIXI.loader.resources['fox_tower_1'].texture) :
-		new PIXI.Sprite(PIXI.loader.resources['panda_tower_1'].texture)
+	  this.sprite = this.team === 1 ?
+		  new PIXI.Sprite(PIXI.loader.resources[`fox_tower${this.tier}`].texture) :
+		  new PIXI.Sprite(PIXI.loader.resources[`panda_tower${this.tier}`].texture)
 	
     this.sprite.anchor.set(0.5, 0.8)
     this.sprite.interactive = true
@@ -41,12 +41,29 @@ class Tower extends GameObject {
         this.sprite.filters = [filters['red_outline']]
     })
     this.sprite.on('mouseout', () => this.sprite.filters = [])
-
-
     this.renderer.addChild(this.sprite)
-    this.hp_bar = new PIXI.Graphics()
 
-    this.renderer.addChild(this.hp_bar)  
+    this.hp_bar = new PIXI.Graphics()
+    this.renderer.addChild(this.hp_bar)
+
+    this.icon = this.team === 1 ?
+      new PIXI.Sprite(PIXI.loader.resources['bamboo_icon'].texture) :
+      new PIXI.Sprite(PIXI.loader.resources['plum_icon'].texture)
+    this.icon.x = this.stats.x / 20 + 6
+    this.icon.y = this.stats.y / 20 + 6
+    this.icon.anchor.set(0.5)
+
+    switch(this.tier){
+      case 1:
+        this.icon.scale.set(0.6)
+        break
+      case 2:
+        this.icon.scale.set(0.42)
+        break
+
+    }
+
+    Game.instance.panel.mini_map.renderer.addChild(this.icon)
 
     // function binding
     this.render_hp_bar = this.render_hp_bar.bind(this)
@@ -57,6 +74,7 @@ class Tower extends GameObject {
   update(data){
     if(this.stats.dead){
       this.renderer.visible = false
+      this.icon.visible = false
       return
     }
     this.render_hp_bar(towers_config[this.tier - 1].hp_bar)

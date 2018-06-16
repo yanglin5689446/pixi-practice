@@ -17,6 +17,10 @@ class Panel {
     this.status = new Status(player.team)
     this.renderer.addChild(this.status.renderer)
   }
+  update(player){
+    this.mini_map.update(player.renderer.position, player.team)
+    this.status.update(player.stats, player.abilities)
+  }
   resize(){
     //this.scoreboard.renderer.position.set(canvas.width - 250, 50)
     this.mini_map.renderer.position.set(canvas.width - 550, canvas.height - 200)

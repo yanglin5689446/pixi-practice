@@ -9,6 +9,7 @@ import socket from '../../../../socket'
 class Player extends Character {
   constructor (initialize){
     super(initialize)
+    this.abilities = initialize.abilities
 
     this.cd_bar = new PIXI.Graphics()
     this.renderer.addChild(this.cd_bar)
@@ -23,15 +24,20 @@ class Player extends Character {
 
     this.create_reachable_circle()
   }
-  create_reachable_circle(){
-    this.reachable_circle = new PIXI.Graphics()
+  _update_reachable_range(){
+    this.reachable_circle.clear()
     this.reachable_circle.alpha = 0.3
     this.reachable_circle.beginFill(0x90CAF9, 1);   
     this.reachable_circle.drawCircle(0, 0, this.stats.reachable_range)
     this.reachable_circle.endFill()
+  }
+  create_reachable_circle(){
+    this.reachable_circle = new PIXI.Graphics()
     this.reachable_circle.interactive = true
     this.reachable_circle.x = this.renderer.x
     this.reachable_circle.y = this.renderer.y
+
+    this._update_reachable_range()
 
     this.reachable_circle.zIndex = -1
 
@@ -73,8 +79,11 @@ class Player extends Character {
   }
   update(data){
     this.stats = data.stats
+    this.abilities = data.abilities
 
     this._update_cd()
+    this._update_reachable_range()
+
     this.render_hp_bar(data.stats.hp)
     if(this.stats.hp > 0){
       this.renderer.visible = true
@@ -91,6 +100,17 @@ class Player extends Character {
     }
     this.reachable_circle.x = this.renderer.x
     this.reachable_circle.y = this.renderer.y
+    Game.instance.world.viewport = this.renderer.position
+
+    socket.emit('event', { 
+      type: 'update', 
+      payload: { 
+        id: this.id,
+        facing: this.stats.facing,
+        moved: this.does_moved
+      } 
+    })
+
   }
 
   interact(target){

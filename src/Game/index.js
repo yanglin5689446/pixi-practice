@@ -88,6 +88,9 @@ class Game extends PIXI.Application {
         delete this.objects.coins[key]
       }
     })
+
+    objects.towers.forEach((tower, index) => this.objects.towers[index].update(tower))
+
   }
   update_attacks(attacks){
     attacks.forEach(attack => {
