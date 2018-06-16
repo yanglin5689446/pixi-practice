@@ -1,15 +1,11 @@
 
 
 import { canvas } from '../../constants'
-import StatIcon from './StatIcon'
 
 
-
-class Status {
+class StatIcon {
   constructor(team){
     this.renderer = new PIXI.Container()
-    this.renderer.x = 50
-    this.renderer.y = 50
     this.team = team
 
     this.exp_bar = new PIXI.Graphics()
@@ -54,7 +50,7 @@ class Status {
     this.renderer.addChild(this.avatar)
 
     this.render_exp_bar(0, 100)
-  	this.set_stat_icons()
+    this.set_stat_icons()
   }
   render_exp_bar(exp, next_level_exp){
     const origin = { x: 0, y: 5 }, w = 200, h = 15, ratio = exp / next_level_exp
@@ -76,7 +72,7 @@ class Status {
     this.render_exp_bar(stats.exp, stats.next_level_exp)
   }
   set_stat_icons(){
-    const icons = [ 'attack_damage', 'speed', 'max_hp', 'attack_speed', 'reachable_range' ]
+    const icons = [ 'attack_damage', 'speed', 'max_hp', 'attack_speed', 'reachable_range']
 
     this.icons = icons.map((name, index) => {
       let icon = new PIXI.Sprite(PIXI.loader.resources[name].texture)
@@ -90,4 +86,4 @@ class Status {
   
 }
 
-export default Status
+export default StatIcon

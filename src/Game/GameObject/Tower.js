@@ -26,8 +26,11 @@ class Tower extends GameObject {
     this.team = initialize.team
     this.tier = initialize.tier
     this.object_type = 'tower'
-
-    this.sprite = new PIXI.Sprite(PIXI.loader.resources['main_tower'].texture)
+	
+	this.sprite = this.team === 1 ?
+		new PIXI.Sprite(PIXI.loader.resources['fox_tower_1'].texture) :
+		new PIXI.Sprite(PIXI.loader.resources['panda_tower_1'].texture)
+	
     this.sprite.anchor.set(0.5, 0.8)
     this.sprite.interactive = true
     this.sprite.hitArea = new PIXI.Rectangle(-50, -50, 100, 100)
