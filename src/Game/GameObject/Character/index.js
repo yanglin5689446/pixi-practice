@@ -46,9 +46,9 @@ class Character extends GameObject {
     const origin = { x: -40, y: -65}, w = 80, h = 10, ratio = (this.stats.hp / this.stats.max_hp)
 
     this.hp_bar.clear()
-    this.hp_bar.beginFill(0xFF0000)
+    this.hp_bar.beginFill(0xF4511E)
     this.hp_bar.drawRect(origin.x, origin.y, w, h)
-    this.hp_bar.beginFill(0x8BC34A)
+    this.hp_bar.beginFill(0x43A047)
     this.hp_bar.drawRect(origin.x, origin.y, w  * ratio, h)
   }
   set_facing(facing){

@@ -67,7 +67,7 @@ class Status {
     this.exp_bar.beginFill(0x333333)
     this.exp_bar.drawRect(origin.x, origin.y, w, h)
     this.exp_bar.lineStyle(0, 0)
-    this.exp_bar.beginFill(0x8BC34A)
+    this.exp_bar.beginFill(0x039BE5)
     this.exp_bar.drawRect(origin.x, origin.y, w  * ratio, h)
   }
   update(stats, abilites){

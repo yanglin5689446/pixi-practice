@@ -9,6 +9,8 @@ class NPC extends Character {
   constructor (initialize, type='player'){
     super(initialize)
     if(type == 'mob'){
+      this.renderer.removeChild(this.nickname_text)
+      delete this['nickname_text']
       this.module = this.team === 1 ? animations.fox_minion : animations.panda_minion
       if(this.module[this.stats.facing || 'down']){
         this.sprite.textures = this.module[this.stats.facing || 'down']

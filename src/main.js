@@ -19,7 +19,7 @@ function game_loop(delta){
   const player = game.player
   const data_buffer = game.data_buffer
 
-  panel.update(player)
+  panel.update(player, data_buffer.players)
 
   game.update_players(data_buffer.players, data_buffer.disconnected)
   game.update_objects(data_buffer.objects)

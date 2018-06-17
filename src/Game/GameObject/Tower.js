@@ -85,9 +85,9 @@ class Tower extends GameObject {
     const ratio = (this.stats.hp / this.stats.max_hp)
 
     this.hp_bar.clear()
-    this.hp_bar.beginFill(0xFF0000)
+    this.hp_bar.beginFill(0xF4511E)
     this.hp_bar.drawRect(setting.x, setting.y, setting.w, setting.h)
-    this.hp_bar.beginFill(0x8BC34A)
+    this.hp_bar.beginFill(0x43A047)
     this.hp_bar.drawRect(setting.x, setting.y, setting.w  * ratio, setting.h)
   }
 }
