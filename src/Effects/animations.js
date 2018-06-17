@@ -68,7 +68,6 @@ function load_coin_animation(){
   let frame_width = sprite.width/5, frame_height = sprite.height/2
   let frames = []
   for(let i = 0; i < 2 ; i ++){
-	  
 	  for(let j = 0; j < 5 ; j ++){
 		let clip = new PIXI.Rectangle(frame_width * j, frame_height * i, frame_width, frame_height)
 		frames.push(new PIXI.Texture(sprite.texture, clip))   

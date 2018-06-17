@@ -18,9 +18,6 @@ class Coin extends GameObject {
     this.sprite = new PIXI.extras.AnimatedSprite(animations.coin)
     this.sprite.anchor.set(0.5)
     this.sprite.animationSpeed = 0.2
-    this.sprite.interactive = true
-    this.sprite.on('mousedown', () => Game.instance.player.interact(this))
-
     this.sprite.play()
 
     this.renderer.addChild(this.sprite)

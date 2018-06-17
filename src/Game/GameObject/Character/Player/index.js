@@ -49,6 +49,7 @@ class Player extends Character {
   }
   _update_cd(){
     const current_time = Date.now()
+
     const ratio = this.stats.attack_available_timestamp > current_time 
                 ? (this.stats.attack_available_timestamp - current_time) / this.stats.cd
                 : 0
