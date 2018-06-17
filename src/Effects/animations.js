@@ -65,12 +65,15 @@ function load_panda_minion_animations(){
 
 function load_coin_animation(){
   let sprite = new PIXI.Sprite(PIXI.loader.resources['coin'].texture)
-  let frame_width = sprite.width/4, frame_height = sprite.height
+  let frame_width = sprite.width/5, frame_height = sprite.height/2
   let frames = []
-  for(let i = 0; i < 4 ; i ++){
-    let clip = new PIXI.Rectangle(frame_width * i, 0, frame_width, frame_height)
-    frames.push(new PIXI.Texture(sprite.texture, clip))   
-  } 
+  for(let i = 0; i < 2 ; i ++){
+	  
+	  for(let j = 0; j < 5 ; j ++){
+		let clip = new PIXI.Rectangle(frame_width * j, frame_height * i, frame_width, frame_height)
+		frames.push(new PIXI.Texture(sprite.texture, clip))   
+	  }
+  }
   animations.coin = frames
 
 }

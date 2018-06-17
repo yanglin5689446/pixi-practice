@@ -14,17 +14,25 @@ class StatIcon {
 
     this.sprite = new PIXI.Sprite(PIXI.loader.resources[name].texture)
     this.renderer.addChild(this.sprite)
-    this.upgrade = new PIXI.Sprite(PIXI.loader.resources['upgrade'].texture)
+	
+	let upgrade_mouseover = new PIXI.Sprite(PIXI.loader.resources['upgrade_mouseover'].texture)
+	let upgrade_mouseout = new PIXI.Sprite(PIXI.loader.resources['upgrade'].texture)
+
+	
+	this.upgrade = new PIXI.Sprite(PIXI.loader.resources['upgrade'].texture)
     this.upgrade.scale.set(0.5)
     this.upgrade.x = 20
     this.upgrade.y = 20
+	this.renderer.addChild(this.upgrade)
     this.upgrade.interactive = true
     this.upgrade.buttonMode = true
-    this.upgrade.on('mouseover', () => (this.upgrade.tint = 0x0C8753))
-    this.upgrade.on('mouseout', () => (this.upgrade.tint = 0xFFFFFF))
+	
+	
+    this.upgrade.on('mouseover', () => {this.upgrade.texture = upgrade_mouseover.texture})
+    this.upgrade.on('mouseout', () => {this.upgrade.texture = upgrade_mouseout.texture})
     this.upgrade.on('mousedown', () => Game.instance.player.interact(this))
 
-    this.renderer.addChild(this.upgrade)
+    
 
     const textStyle = new PIXI.TextStyle({ 
       fontSize: 18,
