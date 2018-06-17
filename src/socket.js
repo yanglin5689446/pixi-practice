@@ -8,5 +8,6 @@ const socket = io(SERVER, {
 });
 
 socket.on('connect_error', () => window.location.reload())
+socket.on('disconnect', () => window.location.reload())
 
 export default socket

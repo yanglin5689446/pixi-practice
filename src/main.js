@@ -17,15 +17,16 @@ function game_loop(delta){
   // update player position
   const panel = game.panel
   const player = game.player
-  const data_buffer = game.data_buffer
+  const status = game.status
 
-  panel.update(player, data_buffer.players)
+  if(status.game_over)panel.game_over(player.team === status.winner)
+  panel.update(player, status.players)
 
-  game.update_players(data_buffer.players, data_buffer.disconnected)
-  game.update_objects(data_buffer.objects)
-  game.update_attacks(data_buffer.attacks)
+  game.update_players(status.players, status.disconnected)
+  game.update_objects(status.objects)
+  game.update_attacks(status.attacks)
 
-  player.update(data_buffer.players[player.id])
+  player.update(status.players[player.id])
 }
 
 function initialize_game(){
@@ -54,7 +55,7 @@ function initialize_game(){
     // initialize game loop
     game.game_loop = game_loop
     // initialize data buffer
-    game.data_buffer = {}
+    game.status = {}
 
     // hide login interface
     document.getElementById('login-panel').setAttribute('hidden', 'hidden')
@@ -62,7 +63,7 @@ function initialize_game(){
   })
 
   // update data event handler
-  socket.on('update', (data) => game && (game.data_buffer = data))
+  socket.on('update', (data) => game && (game.status = data))
 
   // emit initialize event
   let team = 0

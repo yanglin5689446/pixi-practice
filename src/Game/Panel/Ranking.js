@@ -11,14 +11,13 @@ class Ranking {
     
     // renderer background
   	let graphics = []
-  	for(let i = 0;i < 3;i++){
+  	for(let i = 0;i < 5; i++){
   		graphics[i] = new PIXI.Graphics()
   		graphics[i].beginFill(0xFFFFFF, 0.8)
   		graphics[i].lineStyle(0)
   		graphics[i].drawRoundedRect(0, i*50, 180, 40, 10)
   		this.renderer.addChild(graphics[i])
   	}
-    this.rankings = []
 
       // renderer field
   	this.setup()
@@ -33,9 +32,13 @@ class Ranking {
 		  cup.x = 8
 		  cup.y = 5 + index * 50
 		  this.renderer.addChild(cup)
-      this.rankings[index] = new RankEntry(cup.x - 8, cup.y - 5)
-      this.renderer.addChild(this.rankings[index].renderer)
 	  })
+    this.rankings = Array(5).fill(0).map((v, index) => {
+      let ranking = new RankEntry(8, index * 50)
+      this.renderer.addChild(ranking.renderer)
+      return ranking      
+    })
+
   }
   update(players){
     let ranking = Object.keys(players)
@@ -45,11 +48,11 @@ class Ranking {
         else
           return players[b].stats.gold - players[a].stats.gold 
       })
-    let k = Math.min(ranking.length, 3)
+    let k = Math.min(ranking.length, 5)
     for(let i = 0 ;i < k ;i ++)
       this.rankings[i].update(players[ranking[i]])
 
-    for(let i = ranking.length ;i < 3 ;i ++)this.rankings[i].renderer.visible = false
+    for(let i = ranking.length ;i < 5 ;i ++)this.rankings[i].renderer.visible = false
   }
 }
 

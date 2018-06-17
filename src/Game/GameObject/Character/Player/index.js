@@ -78,6 +78,7 @@ class Player extends Character {
   }
   update(data){
     this.stats = data.stats
+    this.revive_timestamp = data.revive_timestamp
     this.abilities = data.abilities
 
     this._update_cd()
