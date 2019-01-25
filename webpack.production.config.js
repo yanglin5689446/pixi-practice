@@ -17,7 +17,7 @@ module.exports = {
         inject: 'body'
     }),
     new webpack.DefinePlugin({
-      SERVER: "'ws://140.113.67.102:30000'",
+      SERVER: "'wss://js-final-2018-backend.herokuapp.com'",
     })
   ],
   mode: 'production'
